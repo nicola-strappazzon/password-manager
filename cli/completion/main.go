@@ -1,16 +1,16 @@
 package completion
 
 import (
-    "os"
+	"os"
 
-    "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 func NewCommand(rootCmd *cobra.Command) *cobra.Command {
-    var cmd = &cobra.Command{
-        Use:   "completion",
-        Short: "Generate completion script",
-        Long:  `To load completions:
+	var cmd = &cobra.Command{
+		Use:   "completion",
+		Short: "Generate completion script",
+		Long: `To load completions:
 
 Bash:
 
@@ -27,25 +27,23 @@ Zsh:
   $ echo "autoload -U compinit; compinit" >> ~/.zshrc
   $ pm completion zsh > "${fpath[1]}/_pm"
 `,
-        DisableFlagsInUseLine: true,
-        Hidden:                false,
-        ValidArgs:             []string{"bash", "zsh", "fish"},
-        Run: func(cmd *cobra.Command, args []string) {
-            if len(args) == 0 {
-                cmd.Help()
-                return
-            }
+		DisableFlagsInUseLine: true,
+		Hidden:                false,
+		ValidArgs:             []string{"bash", "zsh"},
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) == 0 {
+				cmd.Help()
+				return
+			}
 
-            switch args[0] {
-            case "bash":
-                rootCmd.GenBashCompletion(os.Stdout)
-            case "zsh":
-                rootCmd.GenZshCompletion(os.Stdout)
-            case "fish":
-                rootCmd.GenFishCompletion(os.Stdout, true)
-            }
-        },
-    }
+			switch args[0] {
+			case "bash":
+				rootCmd.GenBashCompletion(os.Stdout)
+			case "zsh":
+				rootCmd.GenZshCompletion(os.Stdout)
+			}
+		},
+	}
 
-    return cmd
+	return cmd
 }

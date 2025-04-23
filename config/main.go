@@ -17,14 +17,6 @@ func GetHomeDir() string {
 	return base
 }
 
-func GetPasswordStoreDir(in string) string {
+func GetWorkDirectory(in string) string {
 	return path.Join(GetHomeDir(), PASSWORD_STORE_DIR, in)
-}
-
-func ValidPasswordStoreDir(in string) bool {
-	if _, err := os.Stat(in); err == nil {
-		return true
-	}
-
-	return false
 }

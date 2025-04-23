@@ -5,9 +5,10 @@ import (
 )
 
 type Node struct {
-	Parent   *Node
+	// Parent   *Node
 	Children []*Node
 	Name     string
+	Path     string
 	IsDir    bool
 }
 
@@ -19,25 +20,29 @@ func (node *Node) Count() int {
 	return len(node.Children)
 }
 
-func (node *Node) Add(name string) {
-	node.Children = append(
-		node.Children,
-		&Node{
-			Parent: node,
-			Name:   name,
-		},
-	)
+func (node *Node) GetPath() string {
+	return removeExtension(node.Path)
 }
 
-func (node *Node) Get(name string) *Node {
-	for index, child := range node.Children {
-		if child.Name == name {
-			return node.Children[index]
-		}
-	}
+// func (node *Node) Add(name string) {
+// 	node.Children = append(
+// 		node.Children,
+// 		&Node{
+// 			Parent: node,
+// 			Name:   name,
+// 		},
+// 	)
+// }
 
-	return &Node{}
-}
+// func (node *Node) Get(name string) *Node {
+// 	for index, child := range node.Children {
+// 		if child.Name == name {
+// 			return node.Children[index]
+// 		}
+// 	}
+
+// 	return &Node{}
+// }
 
 func (node *Node) Print() {
 	node.print(0, "", true)
@@ -45,9 +50,7 @@ func (node *Node) Print() {
 
 func (node *Node) print(level int, prefix string, isLast bool) {
 	if level == 0 && prefix == "" {
-		if node.Name == ".password-store" {
-			fmt.Println(bold("Password Store"))
-		}
+		fmt.Println(bold("Password Store"))
 	} else {
 		branch := ternary(isLast, "└── ", "├── ")
 		name := ternary(node.Count() > 0, bold(node.Name), node.Name)
@@ -60,13 +63,31 @@ func (node *Node) print(level int, prefix string, isLast bool) {
 	}
 }
 
-func ternary[T any](cond bool, a, b T) T {
-	if cond {
-		return a
+func (node *Node) List() (out []string) {
+	if node.Count() > 0 {
+		for _, childNode := range node.Children {
+			if childNode.IsDir {
+				out = append(out, childNode.Name+"/")
+				out = append(out, childNode.List()...)
+			} else {
+				out = append(out, childNode.GetPath())
+			}
+		}
 	}
-	return b
+
+	return out
 }
 
-func bold(in string) string {
-	return fmt.Sprintf("\033[1;37m%s\033[0m", in)
+func (node *Node) Exist(in string) bool {
+	for _, childNode := range node.Children {
+		if childNode.IsDir {
+			if childNode.Exist(in) {
+				return true
+			}
+		} else if childNode.GetPath() == in {
+			return true
+		}
+	}
+
+	return false
 }

@@ -19,13 +19,12 @@ func ignoreDir(in string) bool {
 	return false
 }
 
-// is file?
 func validFile(in fs.DirEntry) bool {
 	if in.IsDir() {
 		return false
 	}
 
-	return !validExtension(in.Name()) // esto se remueve y se compina con otra funcion...
+	return !validExtension(in.Name())
 }
 
 func validExtension(in string) bool {
@@ -36,24 +35,43 @@ func removeExtension(in string) string {
 	return strings.TrimSuffix(in, ".gpg")
 }
 
-func build(path string) (*Node, error) {
+func removeWorkDir(path string) (out string) {
+	out = strings.TrimPrefix(path, config.GetWorkDirectory(""))
+	out = strings.TrimPrefix(out, "/")
+
+	return out
+}
+
+func ternary[T any](cond bool, a, b T) T {
+	if cond {
+		return a
+	}
+	return b
+}
+
+func bold(in string) string {
+	return fmt.Sprintf("\033[1;37m%s\033[0m", in)
+}
+
+func walk(path string) *Node {
 	info, err := os.Stat(path)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
-	nodo := &Node{
+	node := &Node{
 		Name:  removeExtension(filepath.Base(path)),
+		Path:  removeWorkDir(path),
 		IsDir: info.IsDir(),
 	}
 
 	if !info.IsDir() {
-		return nodo, nil
+		return node
 	}
 
-	files, err := os.ReadDir(path)
+	files, _ := os.ReadDir(path)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	for _, file := range files {
@@ -66,22 +84,17 @@ func build(path string) (*Node, error) {
 		}
 
 		childPath := filepath.Join(path, file.Name())
-		childNode, err := build(childPath)
-		if err != nil {
-			return nil, err
-		}
-		nodo.Children = append(nodo.Children, childNode)
+		childNode := walk(childPath)
+		node.Children = append(node.Children, childNode)
 	}
 
-	return nodo, nil
+	return node
 }
 
-func Build(in string) *Node {
-	arbol, err := build(config.GetPasswordStoreDir(in))
-	if err != nil {
-		fmt.Println("Error:", err)
-		return nil
-	}
+func WalkFrom(in string) (out *Node) {
+	return walk(config.GetWorkDirectory(in))
+}
 
-	return arbol
+func Walk() (out *Node) {
+	return WalkFrom("")
 }
