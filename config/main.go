@@ -20,3 +20,7 @@ func GetHomeDir() string {
 func GetWorkDirectory(in string) string {
 	return path.Join(GetHomeDir(), PASSWORD_STORE_DIR, in)
 }
+
+func GetPrivateKeyPath() string {
+	return "/Users/nicola/Documents/documents/documents/Keys/gpg/private.pgp"
+}

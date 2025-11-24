@@ -56,12 +56,16 @@ func bold(in string) string {
 func walk(path string) *Node {
 	info, err := os.Stat(path)
 	if err != nil {
-		return nil
+		info, err = os.Stat(path + ".gpg")
+		if err != nil {
+			return &Node{}
+		}
+		path = path + ".gpg"
 	}
 
 	node := &Node{
 		Name:  removeExtension(filepath.Base(path)),
-		Path:  removeWorkDir(path),
+		Path:  path,
 		IsDir: info.IsDir(),
 	}
 
@@ -71,7 +75,7 @@ func walk(path string) *Node {
 
 	files, _ := os.ReadDir(path)
 	if err != nil {
-		return nil
+		return &Node{}
 	}
 
 	for _, file := range files {

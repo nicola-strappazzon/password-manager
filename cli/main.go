@@ -25,5 +25,5 @@ func Load() {
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(completion.NewCommand(rootCmd))
 	rootCmd.AddCommand(show.NewCommand())
-	rootCmd.Execute()	
+	rootCmd.Execute()
 }

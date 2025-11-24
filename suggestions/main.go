@@ -2,8 +2,8 @@ package suggestions
 
 import (
 	"fmt"
-	"os"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/nicola-strappazzon/pm/config"
@@ -11,9 +11,9 @@ import (
 
 func IsValid(in string) bool {
 	if _, err := os.Stat(in); err == nil {
-	  return true
+		return true
 	}
-  
+
 	return false
 }
 
@@ -32,10 +32,10 @@ func Suggestions(in string) (out []string) {
 	items, err := ioutil.ReadDir(path)
 
 	if err != nil {
-	   fmt.Println("Error:", err)
-	   return
+		fmt.Println("Error:", err)
+		return
 	}
- 
+
 	for _, item := range items {
 		name := item.Name()
 		if len(name) > 0 && name[0] == '.' {
@@ -43,7 +43,7 @@ func Suggestions(in string) (out []string) {
 		}
 
 		if item.IsDir() {
-			out = append(out, name + "/")
+			out = append(out, name+"/")
 		} else if filepath.Ext(name) == ".gpg" {
 			out = append(out, name)
 		}

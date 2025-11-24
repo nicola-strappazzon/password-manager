@@ -11,8 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "ls",
 		Short: "List all encrypted items in tree format.",
 		Run: func(cmd *cobra.Command, args []string) {
-			nodes := tree.WalkFrom(FirstOrEmpty(args))
-			nodes.Print()
+			tree.WalkFrom(GetFirstArg(args)).Print()
 		},
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			return tree.Walk().List(), cobra.ShellCompDirectiveNoFileComp
@@ -22,9 +21,10 @@ func NewCommand() *cobra.Command {
 	return cmd
 }
 
-func FirstOrEmpty(in []string) string {
-	if len(in) > 0 {
+func GetFirstArg(in []string) string {
+	if len(in) == 1 {
 		return in[0]
 	}
+
 	return ""
 }
