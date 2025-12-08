@@ -1,0 +1,11 @@
+┌───────────────────────────────────────────────────────────────┐
+│ Please enter the passphrase to unlock the OpenPGP secret key: │
+│ "Nicola Strappazzon <nicola@strappazzon.me>"                  │
+│ 4096-bit RSA key, ID DB9D56A1864BF103,                        │
+│ created 2024-02-17 (main key ID 8E97CAEEEE861364).            │
+│                                                               │
+│                                                               │
+│ Passphrase: _________________________________________________ │
+│                                                               │
+│         <OK>                                   <Cancel>       │
+└───────────────────────────────────────────────────────────────┘
