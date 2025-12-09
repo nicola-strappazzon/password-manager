@@ -12,7 +12,7 @@ import (
 func Load() {
 	var rootCmd = &cobra.Command{
 		Use:  "pm",
-		Long: "pm: The standard unix password manager write in go.",
+		Long: "pm: The new standard unix password manager write in go.",
 		Run: func(cmd *cobra.Command, args []string) {
 			ls.NewCommand().Run(cmd, args)
 		},

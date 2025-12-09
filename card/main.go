@@ -7,13 +7,17 @@ import (
 )
 
 type Card struct {
-	Host     string `yaml:"host"`
-	OTP      string `yaml:"otp"`
-	Password string `yaml:"password"`
-	Port     string `yaml:"port"`
-	URL      string `yaml:"url"`
-	Username string `yaml:"username"`
-	AWS      struct {
+	Email         string `yaml:"email"`
+	Host          string `yaml:"host"`
+	Notes         string `yaml:"notes"`
+	OTP           string `yaml:"otp"`
+	Password      string `yaml:"password"`
+	Port          string `yaml:"port"`
+	RecoveryCodes string `yaml:"recovery_codes"`
+	SecretKey     string `yaml:"secret_key"`
+	URL           string `yaml:"url"`
+	Username      string `yaml:"username"`
+	AWS           struct {
 		Region          string `yaml:"region"`
 		AccountId       string `yaml:"account_id"`
 		AccessKey       string `yaml:"access_key"`

@@ -18,9 +18,10 @@ var passphrase string
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "show [flags] path/to/file",
-		Short: "Show and decrypt selected data. By default, only the password field is shown.",
-    	Example: "  pm show -p <passphrase> -c wifi/theforce\n" +
-    			 "  pm show -p <passphrase> -c -f aws.access_key com/aws",
+		Short: "Show and decrypt selected data. By default, shows the file content.",
+		Example: "  pm show -p <passphrase> wifi/theforce\n" +
+			"  pm show -p <passphrase> -c wifi/theforce\n" +
+			"  pm show -p <passphrase> -c -f aws.access_key com/aws",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				cmd.Help()
@@ -41,18 +42,23 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted data to clipboard")
-	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name. The default is <password>.\nAllowed fields:\n host | otp | pass | password | port | url | user | username\n aws.region | aws.account_id | aws.access_key | aws.secret_access_key")
+	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name. Allowed fields:\n host | otp | pass | password | port | url | user | username\n aws.region | aws.account_id | aws.access_key | aws.secret_access_key")
 
 	return cmd
 }
 
 func Run(cmd *cobra.Command, path string) {
 	var v string
-	var c = card.New(openpgp.Decrypt(passphrase, path))
+	var b = openpgp.Decrypt(passphrase, path)
+	var c = card.New(b)
 
 	switch field {
+	case "email":
+		v = c.Email
 	case "host":
 		v = c.Host
+	case "notes":
+		v = c.Notes
 	case "otp":
 		v = c.OTP
 	case "pass":
@@ -61,6 +67,10 @@ func Run(cmd *cobra.Command, path string) {
 		v = c.Password
 	case "port":
 		v = c.Port
+	case "recovery_codes":
+		v = c.RecoveryCodes
+	case "secret_key":
+		v = c.SecretKey
 	case "url":
 		v = c.URL
 	case "user":
@@ -76,7 +86,7 @@ func Run(cmd *cobra.Command, path string) {
 	case "aws.secret_access_key":
 		v = c.AWS.SecretAccessKey
 	default:
-		v = c.Password
+		v = b
 	}
 
 	if clip {
