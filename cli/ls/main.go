@@ -26,6 +26,10 @@ func NewCommand() *cobra.Command {
 			}
 
 			for _, v := range all {
+				if v == toComplete {
+					continue
+				}
+
 				if strings.HasPrefix(v, toComplete) {
 					suggestions = append(suggestions, v)
 				}

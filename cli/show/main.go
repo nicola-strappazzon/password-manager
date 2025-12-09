@@ -24,7 +24,7 @@ func NewCommand() *cobra.Command {
 		Use:   "show path/to/file [flags]",
 		Short: "Show and decrypt selected data. By default, shows the file content.",
 		Example: "  pm show <TAB>\n" +
-		    "  pm show wifi/theforce -p <passphrase>\n" +
+			"  pm show wifi/theforce -p <passphrase>\n" +
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -47,6 +47,10 @@ func NewCommand() *cobra.Command {
 			}
 
 			for _, v := range all {
+				if v == toComplete {
+					continue
+				}
+
 				if strings.HasPrefix(v, toComplete) {
 					suggestions = append(suggestions, v)
 				}
