@@ -2,6 +2,7 @@ package tree
 
 import (
 	"fmt"
+	// "strings"
 )
 
 type Node struct {
@@ -20,9 +21,9 @@ func (node *Node) Count() int {
 	return len(node.Children)
 }
 
-func (node *Node) GetPath() string {
-	return removeExtension(node.Path)
-}
+// func (node *Node) GetPath() string {
+// 	return removeExtension(node.Path)
+// }
 
 // func (node *Node) Add(name string) {
 // 	node.Children = append(
@@ -63,31 +64,35 @@ func (node *Node) print(level int, prefix string, isLast bool) {
 	}
 }
 
-func (node *Node) List() (out []string) {
-	if node.Count() > 0 {
-		for _, childNode := range node.Children {
-			if childNode.IsDir {
-				out = append(out, childNode.Name+"/")
-				out = append(out, childNode.List()...)
-			} else {
-				out = append(out, childNode.GetPath())
-			}
-		}
-	}
+// func (node *Node) List() (out []string) {
+// 	if node.Count() > 0 {
+// 		for _, childNode := range node.Children {
+// 			if childNode.IsDir {
+// 				out = append(out, childNode.Name+"/")
+// 				out = append(out, childNode.List()...)
+// 			} else {
+// 				out = append(out, childNode.GetPath())
+// 			}
+// 		}
+// 	}
 
-	return out
-}
+// 	for i, p := range out {
+// 		out[i] = strings.Replace(p, "/Users/nicola/.password-store2/", "", -1)
+// 	}
 
-func (node *Node) Exist(in string) bool {
-	for _, childNode := range node.Children {
-		if childNode.IsDir {
-			if childNode.Exist(in) {
-				return true
-			}
-		} else if childNode.GetPath() == in {
-			return true
-		}
-	}
+// 	return
+// }
 
-	return false
-}
+// func (node *Node) Exist(in string) bool {
+// 	for _, childNode := range node.Children {
+// 		if childNode.IsDir {
+// 			if childNode.Exist(in) {
+// 				return true
+// 			}
+// 		} else if childNode.GetPath() == in {
+// 			return true
+// 		}
+// 	}
+
+// 	return false
+// }

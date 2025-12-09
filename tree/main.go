@@ -36,7 +36,7 @@ func removeExtension(in string) string {
 }
 
 func removeWorkDir(path string) (out string) {
-	out = strings.TrimPrefix(path, config.GetWorkDirectory(""))
+	out = strings.TrimPrefix(path, config.GetWorkDirectory())
 	out = strings.TrimPrefix(out, "/")
 
 	return out
@@ -96,7 +96,7 @@ func walk(path string) *Node {
 }
 
 func WalkFrom(in string) (out *Node) {
-	return walk(config.GetWorkDirectory(in))
+	return walk(config.GetWorkDirectoryFrom(in))
 }
 
 func Walk() (out *Node) {

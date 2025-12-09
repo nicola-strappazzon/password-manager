@@ -4,7 +4,7 @@ import (
 	"github.com/nicola-strappazzon/pm/cli/completion"
 	"github.com/nicola-strappazzon/pm/cli/ls"
 	"github.com/nicola-strappazzon/pm/cli/show"
-	"github.com/nicola-strappazzon/pm/tree"
+	// "github.com/nicola-strappazzon/pm/tree"
 
 	"github.com/spf13/cobra"
 )
@@ -16,12 +16,14 @@ func Load() {
 		Run: func(cmd *cobra.Command, args []string) {
 			ls.NewCommand().Run(cmd, args)
 		},
-		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-			return tree.Walk().List(), cobra.ShellCompDirectiveNoFileComp
+		// ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		// 	return tree.Walk().List(), cobra.ShellCompDirectiveNoFileComp
+		// },
+		CompletionOptions: cobra.CompletionOptions{
+			DisableDefaultCmd: true,
 		},
 	}
 
-	rootCmd.CompletionOptions.DisableDefaultCmd = false
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(completion.NewCommand(rootCmd))
 	rootCmd.AddCommand(show.NewCommand())

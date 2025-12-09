@@ -19,6 +19,7 @@ Bash:
   # To load completions for each session, execute once:
   # Linux:
   $ pm completion bash > /etc/bash_completion.d/pm
+
   # macOS:
   $ pm completion bash > /usr/local/etc/bash_completion.d/pm
 
