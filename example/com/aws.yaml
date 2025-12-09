@@ -1,0 +1,10 @@
+---
+password: "@mAz0nP@$$"
+username: "mengano"
+otpauth: "JBSWY3DPEHPK3PXP"
+url: "https://com.signin.aws.amazon.com/console"
+aws:
+  region: "eu-west-1"
+  account_id: "012345678901"
+  access_key: "AKIAIOSFODNN7EXAMPLE"
+  secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"

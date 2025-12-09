@@ -6,6 +6,7 @@ toolchain go1.24.2
 
 require (
 	github.com/ProtonMail/gopenpgp/v3 v3.3.0
+	github.com/goccy/go-yaml v1.19.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	golang.design/x/clipboard v0.7.1
