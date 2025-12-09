@@ -4,7 +4,6 @@ import (
 	"github.com/nicola-strappazzon/pm/cli/completion"
 	"github.com/nicola-strappazzon/pm/cli/ls"
 	"github.com/nicola-strappazzon/pm/cli/show"
-	// "github.com/nicola-strappazzon/pm/tree"
 
 	"github.com/spf13/cobra"
 )
@@ -12,13 +11,10 @@ import (
 func Load() {
 	var rootCmd = &cobra.Command{
 		Use:  "pm",
-		Long: "pm: The new standard unix password manager write in go.",
+		Long: "A modern Unix-style password manager written in Go.",
 		Run: func(cmd *cobra.Command, args []string) {
 			ls.NewCommand().Run(cmd, args)
 		},
-		// ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		// 	return tree.Walk().List(), cobra.ShellCompDirectiveNoFileComp
-		// },
 		CompletionOptions: cobra.CompletionOptions{
 			DisableDefaultCmd: true,
 		},
