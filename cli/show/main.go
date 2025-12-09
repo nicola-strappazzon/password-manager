@@ -42,7 +42,7 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted data to clipboard")
-	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name. Allowed fields:\n host | otp | pass | password | port | url | user | username\n aws.region | aws.account_id | aws.access_key | aws.secret_access_key")
+	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name. Allowed fields:\n email | host | notes | otp | pass | password | port | recovery_codes\n secret_key | url | user | username | aws.region | aws.account_id\n aws.access_key | aws.secret_access_key")
 
 	return cmd
 }
