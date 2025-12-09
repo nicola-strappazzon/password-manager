@@ -18,7 +18,7 @@ var passphrase string
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "show [flags] path/to/file",
-		Short: "Show and decrypt selected data, by default show only password field.",
+		Short: "Show and decrypt selected data. By default, only the password field is shown.",
     	Example: "  pm show -p <passphrase> -c wifi/theforce\n" +
     			 "  pm show -p <passphrase> -c -f aws.access_key com/aws",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -41,7 +41,7 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted data to clipboard")
-	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name, by default is <password>.\nOnly allow this fields:\n host|otp|pass|password|port|url|user|username\n aws.region|aws.account_id|aws.access_key\n aws.secret_access_key")
+	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name. The default is <password>.\nAllowed fields:\n host | otp | pass | password | port | url | user | username\n aws.region | aws.account_id | aws.access_key | aws.secret_access_key")
 
 	return cmd
 }
