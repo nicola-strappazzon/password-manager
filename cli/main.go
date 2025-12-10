@@ -11,7 +11,7 @@ import (
 func Load() {
 	var rootCmd = &cobra.Command{
 		Use:  "pm",
-		Long: "A modern Unix-style password manager written in Go.",
+		Long: "This is another Unix-style password manager written in Go.",
 		Run: func(cmd *cobra.Command, args []string) {
 			ls.NewCommand().Run(cmd, args)
 		},
