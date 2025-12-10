@@ -8,12 +8,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Go
+    - name: Install X11 dev packages
+      run: apt install libx11-dev
+
+    - name: Install Go
       uses: actions/setup-go@v3
       with:
         go-version: 1.24
 
-    - name: Deadcode
+    - name: Install Deadcode
       run: |
         go get -tool golang.org/x/tools/cmd/deadcode@latest
         go tool deadcode ./...
