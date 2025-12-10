@@ -17,6 +17,6 @@ func Write(in string) {
 
 func check(in error) {
 	if in != nil {
-		log.Fatalf(in.Error())
+		log.Fatal(in.Error())
 	}
 }

@@ -35,6 +35,6 @@ func Decrypt(passphrase, path string) string {
 
 func check(in error) {
 	if in != nil {
-		log.Fatalf(in.Error())
+		log.Fatal(in.Error())
 	}
 }
