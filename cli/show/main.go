@@ -18,11 +18,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var all bool
-var clip bool
+var flagAll bool
+var flagClip bool
 var flagQR bool
-var field string
-var passphrase string
+var flagField string
+var flagPassphrase string
 
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
@@ -34,21 +34,6 @@ func NewCommand() *cobra.Command {
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
 			"  pm show com/aws -p <passphrase> -c -f otp\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if all && field != "" {
-				return fmt.Errorf("flags --all and --field are mutually exclusive")
-			}
-			if all && flagQR {
-				return fmt.Errorf("flags --all and --qr are mutually exclusive")
-			}
-			if flagQR && field != "" {
-				return fmt.Errorf("flags --qr and --field are mutually exclusive")
-			}
-			if flagQR && clip {
-				return fmt.Errorf("flags --qr and --clip are mutually exclusive")
-			}
-			return nil
-		},
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				cmd.Help()
@@ -82,11 +67,16 @@ func NewCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(&all, "all", "a", false, "Show all decrypted file")
-	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
+	cmd.Flags().BoolVarP(&flagClip, "clip", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate QR code for decrypted password")
-	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name...")
-	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+
+	cmd.MarkFlagsMutuallyExclusive("all", "field")
+	cmd.MarkFlagsMutuallyExclusive("all", "qr")
+	cmd.MarkFlagsMutuallyExclusive("qr", "field")
+	cmd.MarkFlagsMutuallyExclusive("qr", "clip")
 
 	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		fields := []string{
@@ -122,10 +112,10 @@ func NewCommand() *cobra.Command {
 
 func Run(cmd *cobra.Command, path string) {
 	var v string
-	var b = openpgp.Decrypt(term.ReadPassword(passphrase), path)
+	var b = openpgp.Decrypt(term.ReadPassword(flagPassphrase), path)
 	var c = card.New(b)
 
-	switch field {
+	switch flagField {
 	case "email":
 		v = c.Email
 	case "host":
@@ -159,14 +149,14 @@ func Run(cmd *cobra.Command, path string) {
 	case "aws.secret_access_key":
 		v = c.AWS.SecretAccessKey
 	default:
-		if all {
+		if flagAll {
 			v = b
 		} else {
 			v = c.Password
 		}
 	}
 
-	if clip {
+	if flagClip {
 		clipboard.Write(v)
 	} else if flagQR {
 		qr.Generate(v)
