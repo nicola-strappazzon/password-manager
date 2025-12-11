@@ -35,13 +35,6 @@ func removeExtension(in string) string {
 	return strings.TrimSuffix(in, ".gpg")
 }
 
-// func removeWorkDir(path string) (out string) {
-// 	out = strings.TrimPrefix(path, config.GetWorkDirectory())
-// 	out = strings.TrimPrefix(out, "/")
-
-// 	return out
-// }
-
 func ternary[T any](cond bool, a, b T) T {
 	if cond {
 		return a
@@ -98,7 +91,3 @@ func walk(path string) *Node {
 func WalkFrom(in string) (out *Node) {
 	return walk(config.GetWorkDirectoryFrom(in))
 }
-
-// func Walk() (out *Node) {
-// 	return WalkFrom("")
-// }
