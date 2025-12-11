@@ -30,7 +30,7 @@ func NewCommand() *cobra.Command {
 			"  pm show wifi/theforce -p <passphrase>\n" +
 			"  pm show wifi/theforce -p <passphrase> -a\n" +
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
-			"  pm show wifi/theforce -p <passphrase> -c -f otp\n" +
+			"  pm show com/aws -p <passphrase> -c -f otp\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if all && field != "" {
