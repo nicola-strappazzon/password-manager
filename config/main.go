@@ -8,7 +8,7 @@ import (
 	"github.com/nicola-strappazzon/pm/env"
 )
 
-const PASSWORD_STORE_DIR = ".password-store"
+const WORKDIR = ".password-manager"
 
 var IGNORE_DIRS = []string{".git", ".public-keys"}
 
@@ -25,7 +25,7 @@ func GetHomeDir() string {
 }
 
 func GetWorkDirectoryFrom(in string) string {
-	return path.Join(GetHomeDir(), env.Get("PM_PATH", PASSWORD_STORE_DIR), in)
+	return path.Join(GetHomeDir(), env.Get("PM_PATH", WORKDIR), in)
 }
 
 func GetWorkDirectory() string {
@@ -33,5 +33,5 @@ func GetWorkDirectory() string {
 }
 
 func GetPrivateKeyPath() string {
-	return "/Users/nicola/Documents/documents/documents/Keys/gpg/private.pgp"
+	return env.Get("PM_PRIVATEKEY", "")
 }
