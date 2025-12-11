@@ -8,11 +8,9 @@ import (
 
 func Generate(in string) {
 	config := qrterminal.Config{
-		Level:     qrterminal.M,
-		Writer:    os.Stdout,
-		BlackChar: qrterminal.WHITE,
-		WhiteChar: qrterminal.BLACK,
-		QuietZone: 1,
+		HalfBlocks: true,
+		Level:      qrterminal.M,
+		Writer:     os.Stdout,
 	}
 
 	qrterminal.GenerateWithConfig(in, config)
