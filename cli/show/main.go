@@ -62,7 +62,7 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
-	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted data to clipboard")
+	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name...")
 	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		fields := []string{
@@ -126,7 +126,7 @@ func Run(cmd *cobra.Command, path string) {
 	}
 
 	if clip {
-		clipboard.Write(v)
+		clipboard.Write(c.Password)
 	} else {
 		fmt.Fprintln(cmd.OutOrStdout(), v)
 	}
