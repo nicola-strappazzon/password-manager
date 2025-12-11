@@ -26,13 +26,13 @@ var flagPassphrase string
 
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:   "show path/to/file [flags]",
-		Short: "Show and decrypt selected data. By default, shows the password.",
+		Use:   "show path/to/encrypted [flags]",
+		Short: "Show and decrypt selected data. By default, it shows the password.",
 		Example: "  pm show <TAB>\n" +
 			"  pm show wifi/theforce -p <passphrase>\n" +
 			"  pm show wifi/theforce -p <passphrase> -a\n" +
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
-			"  pm show com/aws -p <passphrase> -c -f otp\n" +
+			"  pm show com/aws -p <passphrase> -f otp -c\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
@@ -69,7 +69,7 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
 	cmd.Flags().BoolVarP(&flagClip, "clip", "c", false, "Copy decrypted password to clipboard")
-	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate QR code for decrypted password")
+	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 
