@@ -10,6 +10,7 @@ import (
 	"github.com/nicola-strappazzon/pm/clipboard"
 	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/openpgp"
+	"github.com/nicola-strappazzon/pm/term"
 	"github.com/nicola-strappazzon/pm/tree"
 
 	"github.com/spf13/cobra"
@@ -84,7 +85,7 @@ func NewCommand() *cobra.Command {
 
 func Run(cmd *cobra.Command, path string) {
 	var v string
-	var b = openpgp.Decrypt(passphrase, path)
+	var b = openpgp.Decrypt(term.ReadPassword(passphrase), path)
 	var c = card.New(b)
 
 	switch field {
