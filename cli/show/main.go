@@ -17,6 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var all bool
 var clip bool
 var field string
 var passphrase string
@@ -24,11 +25,19 @@ var passphrase string
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "show path/to/file [flags]",
-		Short: "Show and decrypt selected data. By default, shows the file content.",
+		Short: "Show and decrypt selected data. By default, shows the password.",
 		Example: "  pm show <TAB>\n" +
 			"  pm show wifi/theforce -p <passphrase>\n" +
+			"  pm show wifi/theforce -p <passphrase> -a\n" +
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
+			"  pm show wifi/theforce -p <passphrase> -c -f otp\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if all && field != "" {
+				return fmt.Errorf("flags --all and --field are mutually exclusive")
+			}
+			return nil
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				cmd.Help()
@@ -62,9 +71,11 @@ func NewCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+	cmd.Flags().BoolVarP(&all, "all", "a", false, "Show all decrypted file")
 	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name...")
+	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+
 	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		fields := []string{
 			"email", "host", "notes", "otp", "pass", "password", "port", "recovery_codes",
@@ -123,7 +134,11 @@ func Run(cmd *cobra.Command, path string) {
 	case "aws.secret_access_key":
 		v = c.AWS.SecretAccessKey
 	default:
-		v = c.Password
+		if all {
+			v = b
+		} else {
+			v = c.Password
+		}
 	}
 
 	if clip {
