@@ -10,6 +10,7 @@ import (
 	"github.com/nicola-strappazzon/pm/clipboard"
 	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/openpgp"
+	"github.com/nicola-strappazzon/pm/otp"
 	"github.com/nicola-strappazzon/pm/term"
 	"github.com/nicola-strappazzon/pm/tree"
 
@@ -96,7 +97,7 @@ func Run(cmd *cobra.Command, path string) {
 	case "notes":
 		v = c.Notes
 	case "otp":
-		v = c.OTP
+		v = otp.Get(c.OTP)
 	case "pass":
 		v = c.Password
 	case "password":
@@ -122,11 +123,11 @@ func Run(cmd *cobra.Command, path string) {
 	case "aws.secret_access_key":
 		v = c.AWS.SecretAccessKey
 	default:
-		v = b
+		v = c.Password
 	}
 
 	if clip {
-		clipboard.Write(c.Password)
+		clipboard.Write(v)
 	} else {
 		fmt.Fprintln(cmd.OutOrStdout(), v)
 	}
