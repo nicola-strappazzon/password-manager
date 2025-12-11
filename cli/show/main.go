@@ -78,9 +78,22 @@ func NewCommand() *cobra.Command {
 
 	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		fields := []string{
-			"email", "host", "notes", "otp", "pass", "password", "port", "recovery_codes",
-			"secret_key", "url", "user", "username",
-			"aws.region", "aws.account_id", "aws.access_key", "aws.secret_access_key",
+			"email",
+			"host",
+			"notes",
+			"otp",
+			"pass",
+			"password",
+			"port",
+			"recovery_codes",
+			"secret_key",
+			"url",
+			"user",
+			"username",
+			"aws.region",
+			"aws.account_id",
+			"aws.access_key",
+			"aws.secret_access_key",
 		}
 
 		var out []string
