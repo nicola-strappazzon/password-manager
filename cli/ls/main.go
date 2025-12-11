@@ -20,7 +20,7 @@ func NewCommand() *cobra.Command {
 			tree.WalkFrom(GetFirstArg(args)).Print()
 		},
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) (suggestions []string, _ cobra.ShellCompDirective) {
-			all, err := GetAllDirectories(config.GetWorkDirectory())
+			all, err := GetAllDirectories(config.GetDataDirectory())
 			if err != nil {
 				return suggestions, cobra.ShellCompDirectiveNoFileComp
 			}
@@ -58,7 +58,7 @@ func GetAllDirectories(root string) (dirs []string, err error) {
 		if !d.IsDir() {
 			return nil
 		}
-		rel, err := filepath.Rel(config.GetWorkDirectory(), path)
+		rel, err := filepath.Rel(config.GetDataDirectory(), path)
 		if err == nil && rel != "." {
 			dirs = append(dirs, rel+"/")
 		}

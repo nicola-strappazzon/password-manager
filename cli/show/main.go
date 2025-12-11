@@ -11,6 +11,7 @@ import (
 	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/openpgp"
 	"github.com/nicola-strappazzon/pm/otp"
+	"github.com/nicola-strappazzon/pm/qr"
 	"github.com/nicola-strappazzon/pm/term"
 	"github.com/nicola-strappazzon/pm/tree"
 
@@ -19,6 +20,7 @@ import (
 
 var all bool
 var clip bool
+var flagQR bool
 var field string
 var passphrase string
 
@@ -36,6 +38,15 @@ func NewCommand() *cobra.Command {
 			if all && field != "" {
 				return fmt.Errorf("flags --all and --field are mutually exclusive")
 			}
+			if all && flagQR {
+				return fmt.Errorf("flags --all and --qr are mutually exclusive")
+			}
+			if flagQR && field != "" {
+				return fmt.Errorf("flags --qr and --field are mutually exclusive")
+			}
+			if flagQR && clip {
+				return fmt.Errorf("flags --qr and --clip are mutually exclusive")
+			}
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
@@ -52,7 +63,7 @@ func NewCommand() *cobra.Command {
 			Run(cmd, tree.WalkFrom(GetFirstArg(args)).Path)
 		},
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) (suggestions []string, _ cobra.ShellCompDirective) {
-			all, err := ListDirsAndGPG(config.GetWorkDirectory())
+			all, err := ListDirsAndGPG(config.GetDataDirectory())
 			if err != nil {
 				return suggestions, cobra.ShellCompDirectiveNoFileComp
 			}
@@ -73,6 +84,7 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().BoolVarP(&all, "all", "a", false, "Show all decrypted file")
 	cmd.Flags().BoolVarP(&clip, "clip", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate QR code for decrypted password")
 	cmd.Flags().StringVarP(&field, "field", "f", "", "Filter by field name...")
 	cmd.Flags().StringVarP(&passphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 
@@ -156,6 +168,8 @@ func Run(cmd *cobra.Command, path string) {
 
 	if clip {
 		clipboard.Write(v)
+	} else if flagQR {
+		qr.Generate(v)
 	} else {
 		fmt.Fprintln(cmd.OutOrStdout(), v)
 	}

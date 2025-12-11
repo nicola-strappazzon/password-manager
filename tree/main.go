@@ -89,5 +89,5 @@ func walk(path string) *Node {
 }
 
 func WalkFrom(in string) (out *Node) {
-	return walk(config.GetWorkDirectoryFrom(in))
+	return walk(config.GetDataDirectoryFrom(in))
 }
