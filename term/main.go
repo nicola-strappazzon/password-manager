@@ -17,7 +17,7 @@ func ReadPassword(in string) string {
 			log.Fatal(err)
 		}
 
-		fmt.Println("")
+		fmt.Print("\r\033[2K")
 
 		return string(bytePassword)
 	}
