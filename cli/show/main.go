@@ -24,8 +24,8 @@ var flagQR bool
 var flagField string
 var flagPassphrase string
 
-func NewCommand() *cobra.Command {
-	var cmd = &cobra.Command{
+func NewCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
 		Use:   "show path/to/encrypted [flags]",
 		Short: "Show and decrypt selected data. By default, it shows the password.",
 		Example: "  pm show <TAB>\n" +
@@ -34,37 +34,8 @@ func NewCommand() *cobra.Command {
 			"  pm show wifi/theforce -p <passphrase> -c\n" +
 			"  pm show com/aws -p <passphrase> -f otp -c\n" +
 			"  pm show com/aws -p <passphrase> -f aws.access_key -c",
-		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) == 0 {
-				cmd.Help()
-				return
-			}
-
-			if tree.WalkFrom(GetFirstArg(args)).IsDir {
-				tree.WalkFrom(GetFirstArg(args)).Print()
-				return
-			}
-
-			Run(cmd, tree.WalkFrom(GetFirstArg(args)).Path)
-		},
-		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) (suggestions []string, _ cobra.ShellCompDirective) {
-			all, err := ListDirsAndGPG(config.GetDataDirectory())
-			if err != nil {
-				return suggestions, cobra.ShellCompDirectiveNoFileComp
-			}
-
-			for _, v := range all {
-				if v == toComplete {
-					continue
-				}
-
-				if strings.HasPrefix(v, toComplete) {
-					suggestions = append(suggestions, v)
-				}
-			}
-
-			return suggestions, cobra.ShellCompDirectiveNoFileComp
-		},
+		Run:               RunCommand,
+		ValidArgsFunction: ValidArgs,
 	}
 
 	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
@@ -78,106 +49,86 @@ func NewCommand() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
 	cmd.MarkFlagsMutuallyExclusive("qr", "clip")
 
-	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		fields := []string{
-			"certificate",
-			"email",
-			"host",
-			"bane",
-			"notes",
-			"otp",
-			"pass",
-			"password",
-			"port",
-			"recovery_codes",
-			"recovery_key",
-			"secret_key",
-			"serial",
-			"token",
-			"url",
-			"user",
-			"username",
-			"aws.region",
-			"aws.account_id",
-			"aws.access_key",
-			"aws.secret_access_key",
-		}
+	cmd.RegisterFlagCompletionFunc("field", FieldCompletion)
 
-		var out []string
-		for _, f := range fields {
-			if strings.HasPrefix(f, toComplete) {
-				out = append(out, f)
-			}
-		}
-		return out, cobra.ShellCompDirectiveNoFileComp
-	})
-
-	return cmd
+	return
 }
 
-func Run(cmd *cobra.Command, path string) {
+func RunCommand(cmd *cobra.Command, args []string) {
 	var v string
-	var b = openpgp.Decrypt(term.ReadPassword(flagPassphrase), path)
+
+	if len(args) == 0 {
+		cmd.Help()
+		return
+	}
+
+	if tree.WalkFrom(GetFirstArg(args)).IsDir {
+		tree.WalkFrom(GetFirstArg(args)).Print()
+		return
+	}
+
+	var b = openpgp.Decrypt(
+		term.ReadPassword(flagPassphrase),
+		tree.WalkFrom(GetFirstArg(args)).Path,
+	)
+
 	var c = card.New(b)
 
-	switch flagField {
-	case "certificate":
-		v = c.Certificate
-	case "email":
-		v = c.Email
-	case "host":
-		v = c.Host
-	case "name":
-		v = c.Name
-	case "notes":
-		v = c.Notes
-	case "otp":
+	if flagAll {
+		v = b
+	}
+
+	if flagField != "" {
+		v = c.Field(flagField)
+	}
+
+	if !flagAll && flagField == "" {
+		v = c.Password
+	}
+
+	if flagField == "otp" {
 		v = otp.Get(c.OTP)
-	case "pass":
-		v = c.Password
-	case "password":
-		v = c.Password
-	case "port":
-		v = c.Port
-	case "recovery_codes":
-		v = c.RecoveryCodes
-	case "recovery_key":
-		v = c.RecoveryKey
-	case "secret_key":
-		v = c.SecretKey
-	case "serial":
-		v = c.Serial
-	case "token":
-		v = c.Token
-	case "url":
-		v = c.URL
-	case "user":
-		v = c.Username
-	case "username":
-		v = c.Username
-	case "aws.region":
-		v = c.AWS.Region
-	case "aws.account_id":
-		v = c.AWS.AccountId
-	case "aws.access_key":
-		v = c.AWS.AccessKey
-	case "aws.secret_access_key":
-		v = c.AWS.SecretAccessKey
-	default:
-		if flagAll {
-			v = b
-		} else {
-			v = c.Password
-		}
 	}
 
 	if flagClip {
 		clipboard.Write(v)
-	} else if flagQR {
-		qr.Generate(v)
-	} else {
-		fmt.Fprintln(cmd.OutOrStdout(), v)
+		return
 	}
+
+	if flagQR {
+		qr.Generate(v)
+		return
+	}
+
+	fmt.Fprintln(cmd.OutOrStdout(), v)
+}
+
+func ValidArgs(cmd *cobra.Command, args []string, toComplete string) (suggestions []string, _ cobra.ShellCompDirective) {
+	all, err := ListDirsAndGPG(config.GetDataDirectory())
+	if err != nil {
+		return suggestions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	for _, v := range all {
+		if v == toComplete {
+			continue
+		}
+
+		if strings.HasPrefix(v, toComplete) {
+			suggestions = append(suggestions, v)
+		}
+	}
+
+	return suggestions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func FieldCompletion(cmd *cobra.Command, args []string, toComplete string) (out []string, _ cobra.ShellCompDirective) {
+	for _, field := range (&card.Card{}).Fields() {
+		if strings.HasPrefix(field, toComplete) {
+			out = append(out, field)
+		}
+	}
+	return out, cobra.ShellCompDirectiveNoFileComp
 }
 
 func GetFirstArg(in []string) string {
