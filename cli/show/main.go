@@ -80,15 +80,20 @@ func NewCommand() *cobra.Command {
 
 	cmd.RegisterFlagCompletionFunc("field", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		fields := []string{
+			"certificate",
 			"email",
 			"host",
+			"bane",
 			"notes",
 			"otp",
 			"pass",
 			"password",
 			"port",
 			"recovery_codes",
+			"recovery_key",
 			"secret_key",
+			"serial",
+			"token",
 			"url",
 			"user",
 			"username",
@@ -116,10 +121,14 @@ func Run(cmd *cobra.Command, path string) {
 	var c = card.New(b)
 
 	switch flagField {
+	case "certificate":
+		v = c.Certificate
 	case "email":
 		v = c.Email
 	case "host":
 		v = c.Host
+	case "name":
+		v = c.Name
 	case "notes":
 		v = c.Notes
 	case "otp":
@@ -132,8 +141,14 @@ func Run(cmd *cobra.Command, path string) {
 		v = c.Port
 	case "recovery_codes":
 		v = c.RecoveryCodes
+	case "recovery_key":
+		v = c.RecoveryKey
 	case "secret_key":
 		v = c.SecretKey
+	case "serial":
+		v = c.Serial
+	case "token":
+		v = c.Token
 	case "url":
 		v = c.URL
 	case "user":
