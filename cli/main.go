@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/nicola-strappazzon/pm/cli/completion"
 	"github.com/nicola-strappazzon/pm/cli/ls"
+	"github.com/nicola-strappazzon/pm/cli/otp"
 	"github.com/nicola-strappazzon/pm/cli/show"
 
 	"github.com/spf13/cobra"
@@ -23,5 +24,6 @@ func Load() {
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(completion.NewCommand(rootCmd))
 	rootCmd.AddCommand(show.NewCommand())
+	rootCmd.AddCommand(otp.NewCommand())
 	rootCmd.Execute()
 }

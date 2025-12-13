@@ -1,4 +1,4 @@
-package show
+package otp
 
 import (
 	"fmt"
@@ -11,7 +11,6 @@ import (
 	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/openpgp"
 	"github.com/nicola-strappazzon/pm/otp"
-	"github.com/nicola-strappazzon/pm/qr"
 	"github.com/nicola-strappazzon/pm/term"
 	"github.com/nicola-strappazzon/pm/tree"
 
@@ -26,31 +25,18 @@ var flagPassphrase string
 
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
-		Use:   "show path/to/encrypted [flags]",
-		Short: "Show and decrypt selected data. By default, it shows the password.",
-		Example: "  pm show <TAB>\n" +
-			"  pm show aws\n" +
-			"  pm show aws -p <passphrase>\n" +
-			"  pm show aws -p <passphrase> -a\n" +
-			"  pm show aws -p <passphrase> -c\n" +
-			"  pm show aws -p <passphrase> -f otp -c\n" +
-			"  pm show aws -p <passphrase> -f aws.access_key -c",
+		Use:   "otp path/to/encrypted [flags]",
+		Short: "Generate an OTP code and optionally put it on the clipboard.",
+		Example: "  pm otp <TAB>\n" +
+			"  pm otp aws\n" +
+			"  pm otp aws -p <passphrase>\n" +
+			"  pm otp aws -p <passphrase> -c\n",
 		Run:               RunCommand,
 		ValidArgsFunction: ValidArgs,
 	}
 
-	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
 	cmd.Flags().BoolVarP(&flagClip, "clip", "c", false, "Copy decrypted password to clipboard")
-	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
-	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
-
-	cmd.MarkFlagsMutuallyExclusive("all", "field")
-	cmd.MarkFlagsMutuallyExclusive("all", "qr")
-	cmd.MarkFlagsMutuallyExclusive("qr", "field")
-	cmd.MarkFlagsMutuallyExclusive("qr", "clip")
-
-	cmd.RegisterFlagCompletionFunc("field", FieldCompletion)
 
 	return
 }
@@ -75,29 +61,10 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	var c = card.New(b)
 
-	if flagAll {
-		v = b
-	}
-
-	if flagField != "" {
-		v = c.Field(flagField)
-	}
-
-	if !flagAll && flagField == "" {
-		v = c.Password
-	}
-
-	if flagField == "otp" {
-		v = otp.Get(c.OTP)
-	}
+	v = otp.Get(c.OTP)
 
 	if flagClip {
 		clipboard.Write(v)
-		return
-	}
-
-	if flagQR {
-		qr.Generate(v)
 		return
 	}
 
@@ -121,15 +88,6 @@ func ValidArgs(cmd *cobra.Command, args []string, toComplete string) (suggestion
 	}
 
 	return suggestions, cobra.ShellCompDirectiveNoFileComp
-}
-
-func FieldCompletion(cmd *cobra.Command, args []string, toComplete string) (out []string, _ cobra.ShellCompDirective) {
-	for _, field := range (&card.Card{}).Fields() {
-		if strings.HasPrefix(field, toComplete) {
-			out = append(out, field)
-		}
-	}
-	return out, cobra.ShellCompDirectiveNoFileComp
 }
 
 func GetFirstArg(in []string) string {
