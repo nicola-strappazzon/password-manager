@@ -17,10 +17,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var flagAll bool
-var flagClip bool
-var flagQR bool
-var flagField string
+var flagCopy bool
 var flagPassphrase string
 
 func NewCommand() (cmd *cobra.Command) {
@@ -35,7 +32,7 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: ValidArgs,
 	}
 
-	cmd.Flags().BoolVarP(&flagClip, "clip", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 
 	return
@@ -63,7 +60,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	v = otp.Get(c.OTP)
 
-	if flagClip {
+	if flagCopy {
 		clipboard.Write(v)
 		return
 	}
