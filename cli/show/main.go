@@ -19,7 +19,7 @@ import (
 )
 
 var flagAll bool
-var flagClip bool
+var flagCopy bool
 var flagQR bool
 var flagField string
 var flagPassphrase string
@@ -40,7 +40,7 @@ func NewCommand() (cmd *cobra.Command) {
 	}
 
 	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
-	cmd.Flags().BoolVarP(&flagClip, "clip", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
@@ -48,7 +48,7 @@ func NewCommand() (cmd *cobra.Command) {
 	cmd.MarkFlagsMutuallyExclusive("all", "field")
 	cmd.MarkFlagsMutuallyExclusive("all", "qr")
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
-	cmd.MarkFlagsMutuallyExclusive("qr", "clip")
+	cmd.MarkFlagsMutuallyExclusive("qr", "copy")
 
 	cmd.RegisterFlagCompletionFunc("field", FieldCompletion)
 
@@ -91,7 +91,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		v = otp.Get(c.OTP)
 	}
 
-	if flagClip {
+	if flagCopy {
 		clipboard.Write(v)
 		return
 	}
