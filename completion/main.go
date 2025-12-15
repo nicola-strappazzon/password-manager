@@ -15,7 +15,7 @@ func SuggestDirectories(cmd *cobra.Command, args []string, toComplete string) (s
 	items, err := Directories()
 
 	if err != nil {
-		return suggestions, cobra.ShellCompDirectiveNoFileComp
+		return suggestions, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
 	}
 
 	return Suggestions(items, toComplete)
@@ -45,7 +45,7 @@ func SuggestDirectoriesAndFiles(cmd *cobra.Command, args []string, toComplete st
 	items, err := DirectoriesAndFiles()
 
 	if err != nil {
-		return suggestions, cobra.ShellCompDirectiveNoFileComp
+		return suggestions, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
 	}
 
 	return Suggestions(items, toComplete)

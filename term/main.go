@@ -8,9 +8,9 @@ import (
 	"golang.org/x/term"
 )
 
-func ReadPassword(in string) string {
+func ReadPassword(title, in string) string {
 	if len(in) == 0 {
-		fmt.Print("Passphrase: ")
+		fmt.Print(title)
 
 		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 		if err != nil {

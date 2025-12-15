@@ -50,7 +50,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	}
 
 	var b = openpgp.Decrypt(
-		term.ReadPassword(flagPassphrase),
+		term.ReadPassword("Passphrase: ", flagPassphrase),
 		tree.WalkFrom(arguments.First(args)).Path,
 	)
 

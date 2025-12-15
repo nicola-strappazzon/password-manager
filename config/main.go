@@ -1,10 +1,10 @@
 package config
 
 import (
-	"log"
 	"os"
 	"path"
 
+	"github.com/nicola-strappazzon/pm/check"
 	"github.com/nicola-strappazzon/pm/env"
 )
 
@@ -18,9 +18,8 @@ func init() {
 
 func GetHomeDir() string {
 	base, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
+	check.Check(err)
+
 	return base
 }
 
@@ -34,4 +33,8 @@ func GetDataDirectory() string {
 
 func GetPrivateKeyPath() string {
 	return env.Get("PM_PRIVATEKEY", "")
+}
+
+func GetPublicKeyPath() string {
+	return env.Get("PM_PUBLICKEY", "")
 }

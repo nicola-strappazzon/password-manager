@@ -1,10 +1,7 @@
 package card
 
 import (
-	// "fmt"
 	"log"
-	"reflect"
-	"strings"
 
 	"github.com/goccy/go-yaml"
 )
@@ -41,113 +38,124 @@ func New(in string) (c Card) {
 	return
 }
 
+func (c Card) ToString() string {
+	out, err := yaml.Marshal(&c)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(out)
+}
+
 func (c Card) Fields() []string {
-	return yamlFields(reflect.TypeOf(c), "")
+	return []string{
+		"certificate",
+		"email",
+		"host",
+		"name",
+		"notes",
+		"otp",
+		"password",
+		"port",
+		"recovery_codes",
+		"recovery_key",
+		"secret_key",
+		"serial",
+		"token",
+		"url",
+		"username",
+		"aws.region",
+		"aws.account_id",
+		"aws.access_key",
+		"aws.secret_access_key",
+	}
 }
 
-func (c Card) Field(in string) string {
-	parts := strings.Split(in, ".")
-	val := reflect.ValueOf(c)
-	typ := reflect.TypeOf(c)
-
-	for _, p := range parts {
-		for i := 0; i < typ.NumField(); i++ {
-			if typ.Field(i).Tag.Get("yaml") == p {
-				val = val.Field(i)
-				typ = typ.Field(i).Type
-				break
-			}
-		}
+func (c Card) GetValue(in string) (out string) {
+	switch in {
+	case "certificate":
+		out = c.Certificate
+	case "email":
+		out = c.Email
+	case "host":
+		out = c.Host
+	case "name":
+		out = c.Name
+	case "notes":
+		out = c.Notes
+	case "otp":
+		out = c.OTP
+	case "password":
+		out = c.Password
+	case "port":
+		out = c.Port
+	case "recovery_codes":
+		out = c.RecoveryCodes
+	case "recovery_key":
+		out = c.RecoveryKey
+	case "secret_key":
+		out = c.SecretKey
+	case "serial":
+		out = c.Serial
+	case "token":
+		out = c.Token
+	case "url":
+		out = c.URL
+	case "username":
+		out = c.Username
+	case "aws.region":
+		out = c.AWS.Region
+	case "aws.account_id":
+		out = c.AWS.AccountId
+	case "aws.access_key":
+		out = c.AWS.AccessKey
+	case "aws.secret_access_key":
+		out = c.AWS.SecretAccessKey
 	}
 
-	if val.Kind() != reflect.String {
-		return ""
-	}
-
-	return val.String()
+	return out
 }
 
-func yamlFields(t reflect.Type, prefix string) []string {
-	fields := []string{}
-
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
+func (c *Card) SetValue(key, value string) {
+	switch key {
+	case "certificate":
+		c.Certificate = value
+	case "email":
+		c.Email = value
+	case "host":
+		c.Host = value
+	case "name":
+		c.Name = value
+	case "notes":
+		c.Notes = value
+	case "otp":
+		c.OTP = value
+	case "password":
+		c.Password = value
+	case "port":
+		c.Port = value
+	case "recovery_codes":
+		c.RecoveryCodes = value
+	case "recovery_key":
+		c.RecoveryKey = value
+	case "secret_key":
+		c.SecretKey = value
+	case "serial":
+		c.Serial = value
+	case "token":
+		c.Token = value
+	case "url":
+		c.URL = value
+	case "username":
+		c.Username = value
+	case "aws.region":
+		c.AWS.Region = value
+	case "aws.account_id":
+		c.AWS.AccountId = value
+	case "aws.access_key":
+		c.AWS.AccessKey = value
+	case "aws.secret_access_key":
+		c.AWS.SecretAccessKey = value
 	}
-
-	for i := 0; i < t.NumField(); i++ {
-		f := t.Field(i)
-
-		if f.PkgPath != "" {
-			continue
-		}
-
-		tag := f.Tag.Get("yaml")
-		if tag == "" || tag == "-" {
-			continue
-		}
-
-		name := tag
-		if prefix != "" {
-			name = prefix + "." + tag
-		}
-
-		if f.Type.Kind() == reflect.Struct {
-			fields = append(fields, yamlFields(f.Type, name)...)
-			continue
-		}
-
-		fields = append(fields, name)
-	}
-
-	return fields
-}
-
-func findByYAMLTag(v reflect.Value, prefix, target string) (string, bool) {
-	v = reflect.Indirect(v)
-	if !v.IsValid() || v.Kind() != reflect.Struct {
-		return "", false
-	}
-
-	t := v.Type()
-
-	for i := 0; i < v.NumField(); i++ {
-		sf := t.Field(i)
-		fv := v.Field(i)
-
-		// si el campo no es exportado, sáltalo
-		if sf.PkgPath != "" {
-			continue
-		}
-
-		tag := sf.Tag.Get("yaml")
-		tagName := strings.Split(tag, ",")[0] // por si hay ",omitempty"
-		if tagName == "" || tagName == "-" {
-			continue
-		}
-
-		full := tagName
-		if prefix != "" {
-			full = prefix + "." + tagName
-		}
-
-		// 1) match directo
-		if full == target {
-			fv = reflect.Indirect(fv)
-			if fv.IsValid() && fv.Kind() == reflect.String {
-				return fv.String(), true
-			}
-			// si algún día quieres soportar otros tipos, aquí es donde convertirías
-			return "", false
-		}
-
-		// 2) bajar recursivamente si es struct
-		fv = reflect.Indirect(fv)
-		if fv.IsValid() && fv.Kind() == reflect.Struct {
-			if s, ok := findByYAMLTag(fv, full, target); ok {
-				return s, true
-			}
-		}
-	}
-
-	return "", false
 }
