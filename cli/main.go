@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/nicola-strappazzon/pm/cli/add"
 	"github.com/nicola-strappazzon/pm/cli/completion"
+	"github.com/nicola-strappazzon/pm/cli/generate"
 	"github.com/nicola-strappazzon/pm/cli/ls"
 	"github.com/nicola-strappazzon/pm/cli/otp"
 	"github.com/nicola-strappazzon/pm/cli/show"
@@ -23,9 +24,10 @@ func Load() {
 	}
 
 	rootCmd.AddCommand(add.NewCommand())
-	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(completion.NewCommand(rootCmd))
-	rootCmd.AddCommand(show.NewCommand())
+	rootCmd.AddCommand(generate.NewCommand())
+	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(otp.NewCommand())
+	rootCmd.AddCommand(show.NewCommand())
 	rootCmd.Execute()
 }
