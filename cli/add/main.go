@@ -23,6 +23,7 @@ func NewCommand() *cobra.Command {
 		Short: "Add or update an encrypted item.",
 		Example: "  pm add <TAB>\n" +
 			"  pm add aws -p <passphrase> -f password -v 12345\n",
+		PreRunE:           PreRun,
 		Run:               RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
@@ -34,6 +35,22 @@ func NewCommand() *cobra.Command {
 	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
 
 	return cmd
+}
+
+func PreRun(cmd *cobra.Command, args []string) error {
+	fields := (&card.Card{}).Fields()
+	field, _ := cmd.Flags().GetString("field")
+	value, _ := cmd.Flags().GetString("value")
+
+	if NotInSlice(field, fields) {
+		return fmt.Errorf("Invalid field: %s", field)
+	}
+
+	if field == "password" && value != "" {
+		return fmt.Errorf("Invalid value: do not provide the password directly. Leave it empty and the tool will prompt for it securely.")
+	}
+
+	return nil
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
@@ -62,4 +79,13 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	}
 
 	file.Save(p, openpgp.Encrypt(c.ToString()))
+}
+
+func NotInSlice(s string, list []string) bool {
+	for _, v := range list {
+		if v == s {
+			return false
+		}
+	}
+	return true
 }

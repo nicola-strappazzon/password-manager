@@ -33,6 +33,7 @@ func NewCommand() (cmd *cobra.Command) {
 			"  pm show aws -p <passphrase> -c\n" +
 			"  pm show aws -p <passphrase> -f otp -c\n" +
 			"  pm show aws -p <passphrase> -f aws.access_key -c",
+		PreRunE:           PreRun,
 		Run:               RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
@@ -51,6 +52,17 @@ func NewCommand() (cmd *cobra.Command) {
 	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
 
 	return
+}
+
+func PreRun(cmd *cobra.Command, args []string) error {
+	fields := (&card.Card{}).Fields()
+	field, _ := cmd.Flags().GetString("field")
+
+	if NotInSlice(field, fields) {
+		return fmt.Errorf("Invalid field: %s", field)
+	}
+
+	return nil
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
@@ -100,4 +112,13 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Fprintln(cmd.OutOrStdout(), v)
+}
+
+func NotInSlice(s string, list []string) bool {
+	for _, v := range list {
+		if v == s {
+			return false
+		}
+	}
+	return true
 }
