@@ -58,6 +58,10 @@ func PreRun(cmd *cobra.Command, args []string) error {
 	fields := (&card.Card{}).Fields()
 	field, _ := cmd.Flags().GetString("field")
 
+	if field == "" {
+		return nil
+	}
+
 	if NotInSlice(field, fields) {
 		return fmt.Errorf("Invalid field: %s", field)
 	}
