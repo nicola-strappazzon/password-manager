@@ -80,5 +80,6 @@ func ReadInBytes(in string) []byte {
 }
 
 func Save(path string, content []byte) {
+	os.MkdirAll(filepath.Dir(path), 0700)
 	check.Check(os.WriteFile(path, content, 0600))
 }
