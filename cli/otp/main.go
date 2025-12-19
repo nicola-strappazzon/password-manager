@@ -27,7 +27,7 @@ func NewCommand() (cmd *cobra.Command) {
 			"  pm otp aws -p <passphrase>\n" +
 			"  pm otp aws -p <passphrase> -c\n",
 		Run:               RunCommand,
-		ValidArgsFunction: completion.SuggestDirectories,
+		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
 	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
