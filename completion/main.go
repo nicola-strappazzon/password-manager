@@ -31,10 +31,18 @@ func Directories() (dirs []string, err error) {
 		if !d.IsDir() {
 			return nil
 		}
-		rel, err := filepath.Rel(basePath, path)
-		if err == nil && rel != "." {
-			dirs = append(dirs, rel+"/")
+
+		rel, _ := filepath.Rel(basePath, path)
+		if rel == "." {
+			return nil
 		}
+
+		if strings.HasPrefix(d.Name(), ".") {
+			return filepath.SkipDir
+		}
+
+		dirs = append(dirs, rel+"/")
+
 		return nil
 	})
 
@@ -59,17 +67,22 @@ func DirectoriesAndFiles() (list []string, err error) {
 			return nil
 		}
 
-		rel, err := filepath.Rel(basePath, path)
-		if err != nil || rel == "." {
+		rel, _ := filepath.Rel(basePath, path)
+		if rel == "." {
 			return nil
 		}
 
 		rel = filepath.ToSlash(rel)
 
 		if d.IsDir() {
+			if strings.HasPrefix(d.Name(), ".") {
+				return filepath.SkipDir
+			}
+
 			if !strings.HasSuffix(rel, "/") {
 				rel += "/"
 			}
+
 			list = append(list, rel)
 			return nil
 		}
