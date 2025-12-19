@@ -32,7 +32,7 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
-	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy OTP code to clipboard")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
 
 	return

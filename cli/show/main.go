@@ -27,7 +27,7 @@ var flagPassphrase string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:   "show path/to/encrypted [flags]",
-		Short: "Show and decrypt selected data. By default, it shows the password.",
+		Short: "Decrypt and show selected data. By default, it shows the password.",
 		Example: "  pm show <TAB>\n" +
 			"  pm show aws\n" +
 			"  pm show aws -p <passphrase>\n" +
