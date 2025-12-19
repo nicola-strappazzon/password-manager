@@ -10,12 +10,6 @@ import (
 
 const DATA_DIR = ".password-manager"
 
-var IGNORE_DIRS = []string{".git", ".public-keys"}
-
-func init() {
-
-}
-
 func GetHomeDir() string {
 	base, err := os.UserHomeDir()
 	check.Check(err)

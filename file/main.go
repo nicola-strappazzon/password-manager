@@ -47,7 +47,7 @@ func Exist(in string) bool {
 
 func IsDir(in string) bool {
 	info, err := os.Stat(in)
-	if err != nil || info != nil {
+	if err != nil {
 		return false
 	}
 

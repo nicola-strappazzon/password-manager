@@ -3,7 +3,8 @@ package ls
 import (
 	"github.com/nicola-strappazzon/pm/arguments"
 	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/tree"
+	"github.com/nicola-strappazzon/pm/config"
+	"github.com/nicola-strappazzon/pm/explorer"
 
 	"github.com/spf13/cobra"
 )
@@ -20,5 +21,5 @@ func NewCommand() *cobra.Command {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
-	tree.WalkFrom(arguments.First(args)).Print()
+	explorer.PrintTree(config.GetDataDirectoryFrom(arguments.First(args)))
 }
