@@ -62,6 +62,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	if flagCopy {
 		clipboard.Write(v)
+		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("Copied OTP code for %s to clipboard.", arguments.First(args)))
 		return
 	}
 
