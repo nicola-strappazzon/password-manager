@@ -7,10 +7,12 @@ import (
 	"github.com/nicola-strappazzon/pm/card"
 	"github.com/nicola-strappazzon/pm/clipboard"
 	"github.com/nicola-strappazzon/pm/completion"
+	"github.com/nicola-strappazzon/pm/config"
+	"github.com/nicola-strappazzon/pm/explorer"
+	"github.com/nicola-strappazzon/pm/file"
 	"github.com/nicola-strappazzon/pm/openpgp"
 	"github.com/nicola-strappazzon/pm/otp"
 	"github.com/nicola-strappazzon/pm/term"
-	"github.com/nicola-strappazzon/pm/tree"
 
 	"github.com/spf13/cobra"
 )
@@ -44,14 +46,14 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if tree.WalkFrom(arguments.First(args)).IsDir {
-		tree.WalkFrom(arguments.First(args)).Print()
+	if file.IsDir(config.GetDataDirectoryFrom(arguments.First(args))) {
+		explorer.PrintTree(config.GetDataDirectoryFrom(arguments.First(args)))
 		return
 	}
 
 	var b = openpgp.Decrypt(
 		term.ReadPassword("Passphrase: ", flagPassphrase),
-		tree.WalkFrom(arguments.First(args)).Path,
+		fmt.Sprintf("%s.gpg", config.GetDataDirectoryFrom(arguments.First(args))),
 	)
 
 	var c = card.New(b)

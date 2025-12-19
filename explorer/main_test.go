@@ -1,16 +1,16 @@
-package completion_test
+package explorer_test
 
 import (
 	"testing"
 
-	"github.com/nicola-strappazzon/pm/completion"
+	"github.com/nicola-strappazzon/pm/explorer"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDirectoriesAndFiles(t *testing.T) {
 
-	items, err := completion.DirectoriesAndFiles()
+	items, err := explorer.DirectoriesAndFiles()
 
 	t.Log(items)
 
@@ -20,7 +20,7 @@ func TestDirectoriesAndFiles(t *testing.T) {
 }
 
 func TestDirectories(t *testing.T) {
-	items, err := completion.Directories()
+	items, err := explorer.Directories()
 
 	t.Log(items)
 
