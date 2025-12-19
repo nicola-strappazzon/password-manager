@@ -48,6 +48,7 @@ func NewCommand() (cmd *cobra.Command) {
 
 	cmd.MarkFlagsMutuallyExclusive("all", "field")
 	cmd.MarkFlagsMutuallyExclusive("all", "qr")
+	cmd.MarkFlagsMutuallyExclusive("all", "copy")
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
 	cmd.MarkFlagsMutuallyExclusive("qr", "copy")
 
@@ -99,7 +100,11 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		v = c.GetValue(flagField)
 	}
 
-	if !flagAll && flagField == "" {
+	if flagField == "" {
+		flagField = "password"
+	}
+
+	if flagField == "password" {
 		v = c.Password
 	}
 
@@ -109,6 +114,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	if flagCopy {
 		clipboard.Write(v)
+		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("Copied %s for %s to clipboard.", flagField, arguments.First(args)))
 		return
 	}
 
