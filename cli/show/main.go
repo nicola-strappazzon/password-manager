@@ -2,16 +2,16 @@ package show
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/nicola-strappazzon/pm/arguments"
 	"github.com/nicola-strappazzon/pm/card"
 	"github.com/nicola-strappazzon/pm/clipboard"
 	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/explorer"
-	"github.com/nicola-strappazzon/pm/file"
 	"github.com/nicola-strappazzon/pm/openpgp"
 	"github.com/nicola-strappazzon/pm/otp"
+	"github.com/nicola-strappazzon/pm/path"
 	"github.com/nicola-strappazzon/pm/qr"
 	"github.com/nicola-strappazzon/pm/term"
 
@@ -44,13 +44,10 @@ func NewCommand() (cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
-	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
-	cmd.MarkFlagsMutuallyExclusive("all", "field")
-	cmd.MarkFlagsMutuallyExclusive("all", "qr")
-	cmd.MarkFlagsMutuallyExclusive("all", "copy")
+	cmd.MarkFlagsMutuallyExclusive("all", "field", "qr")
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
-	cmd.MarkFlagsMutuallyExclusive("qr", "copy")
 
 	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
 
@@ -73,64 +70,60 @@ func PreRun(cmd *cobra.Command, args []string) error {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
-	var v string
+	var value string
+	var tmpCard card.Card
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
 
-	if len(args) == 0 {
-		cmd.Help()
+	if p.IsNotFile() {
+		explorer.PrintTree(p.Absolute())
 		return
 	}
 
-	if file.IsDir(config.GetDataDirectoryFrom(arguments.First(args))) {
-		explorer.PrintTree(config.GetDataDirectoryFrom(arguments.First(args)))
-		return
-	}
-
-	var b = openpgp.Decrypt(
+	tmpCard = card.New(openpgp.Decrypt(
 		term.ReadPassword("Passphrase: ", flagPassphrase),
-		fmt.Sprintf("%s.gpg", config.GetDataDirectoryFrom(arguments.First(args))),
-	)
-
-	var c = card.New(b)
+		p.Full(),
+	))
 
 	if flagAll {
-		v = b
+		value = tmpCard.ToString()
 	}
 
 	if flagField != "" {
-		v = c.GetValue(flagField)
+		value = tmpCard.GetValue(flagField)
 	}
 
-	if flagField == "" {
-		flagField = "password"
+	if flagField == "" && !flagAll {
+		value = tmpCard.Password
 	}
 
 	if flagField == "password" {
-		v = c.Password
+		value = tmpCard.Password
 	}
 
 	if flagField == "otp" {
-		v = otp.Get(c.OTP)
+		value = otp.Get(tmpCard.OTP)
 	}
 
 	if flagCopy {
-		clipboard.Write(v)
-		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("Copied %s for %s to clipboard.", flagField, arguments.First(args)))
+		clipboard.Write(value)
+		fmt.Fprintf(
+			cmd.OutOrStdout(),
+			"Copied %s for %s to clipboard.\n",
+			flagField,
+			p.Path(),
+		)
 		return
 	}
 
 	if flagQR {
-		qr.Generate(v)
+		qr.Generate(value)
 		return
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), v)
+	fmt.Fprintln(cmd.OutOrStdout(), value)
 }
 
 func NotInSlice(s string, list []string) bool {
-	for _, v := range list {
-		if v == s {
-			return false
-		}
-	}
-	return true
+	return !slices.Contains(list, s)
 }

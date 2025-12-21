@@ -41,3 +41,9 @@ func TestIsDir(t *testing.T) {
 		})
 	}
 }
+
+func TestNameWithExtension(t *testing.T) {
+	p := "/Users/test/Documents/idcat.pfx"
+
+	t.Log(file.Name(p))
+}

@@ -1,49 +1,43 @@
 package file
 
 import (
-	"errors"
-	"fmt"
 	"os"
-	"path"
 	"path/filepath"
-	"regexp"
-	"strings"
 
 	"github.com/nicola-strappazzon/pm/check"
-	"github.com/nicola-strappazzon/pm/config"
 )
 
-var validName = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+// var validName = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 
-func Valid(in string) bool {
-	if in == "." || in == "/" {
-		return false
-	}
+// func Valid(in string) bool {
+// 	if in == "." || in == "/" {
+// 		return false
+// 	}
 
-	parts := strings.Split(in, string(filepath.Separator))
-	for _, part := range parts {
-		if part == "" {
-			return false
-		}
-		if !validName.MatchString(part) {
-			return false
-		}
-	}
+// 	parts := strings.Split(in, string(filepath.Separator))
+// 	for _, part := range parts {
+// 		if part == "" {
+// 			return false
+// 		}
+// 		if !validName.MatchString(part) {
+// 			return false
+// 		}
+// 	}
 
-	return true
-}
+// 	return true
+// }
 
-func AbsolutePath(in string) string {
-	return filepath.Clean(path.Join(config.GetDataDirectory(), in))
-}
+// func AbsolutePath(in string) string {
+// 	return filepath.Clean(path.Join(config.GetDataDirectory(), in))
+// }
 
-func Exist(in string) bool {
-	if _, err := os.Stat(in); errors.Is(err, os.ErrNotExist) {
-		return false
-	}
+// func Exist(in string) bool {
+// 	if _, err := os.Stat(in); errors.Is(err, os.ErrNotExist) {
+// 		return false
+// 	}
 
-	return true
-}
+// 	return true
+// }
 
 func IsDir(in string) bool {
 	info, err := os.Stat(in)
@@ -54,18 +48,18 @@ func IsDir(in string) bool {
 	return info.IsDir()
 }
 
-func AddExt(in string) string {
-	ext := filepath.Ext(in)
+// func AddExt(in string) string {
+// 	ext := filepath.Ext(in)
 
-	if ext == ".gpg" {
-		return in
-	}
+// 	if ext == ".gpg" {
+// 		return in
+// 	}
 
-	return fmt.Sprintf("%s.gpg", in)
-}
+// 	return fmt.Sprintf("%s.gpg", in)
+// }
 
 func Name(in string) string {
-	return strings.TrimSuffix(filepath.Base(in), filepath.Ext(in))
+	return filepath.Base(in)
 }
 
 func ReadInString(in string) string {
