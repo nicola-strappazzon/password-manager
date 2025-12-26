@@ -11,17 +11,19 @@ import (
 
 type Card struct {
 	Certificate   string `yaml:"certificate"`
+	Database      string `yaml:"database"`
 	Email         string `yaml:"email"`
 	Files         Files  `yaml:"files"`
 	Host          string `yaml:"host"`
 	Name          string `yaml:"name"`
 	Notes         string `yaml:"notes"`
 	OTP           string `yaml:"otp"`
-	Path          string
 	Password      string `yaml:"password"`
+	Path          string
 	Port          string `yaml:"port"`
 	RecoveryCodes string `yaml:"recovery_codes"`
 	RecoveryKey   string `yaml:"recovery_key"`
+	Schema        string `yaml:"schema"`
 	SecretKey     string `yaml:"secret_key"`
 	Serial        string `yaml:"serial"`
 	Token         string `yaml:"token"`
@@ -43,19 +45,6 @@ func New(in string) (c Card) {
 	return
 }
 
-// func (c Card) Parser(in string) {
-// 	if err := yaml.Unmarshal([]byte(in), &c); err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
-
-// func (c Card) Load(passphrase string) {
-// 	c.Parser(openpgp.Decrypt(
-// 		passphrase,
-// 		c.Path,
-// 	))
-// }
-
 func (c Card) ToString() string {
 	out, err := yaml.Marshal(&c)
 
@@ -68,7 +57,12 @@ func (c Card) ToString() string {
 
 func (c Card) Fields() []string {
 	return []string{
+		"aws.access_key",
+		"aws.account_id",
+		"aws.region",
+		"aws.secret_access_key",
 		"certificate",
+		"database",
 		"email",
 		"host",
 		"name",
@@ -78,15 +72,12 @@ func (c Card) Fields() []string {
 		"port",
 		"recovery_codes",
 		"recovery_key",
+		"schema",
 		"secret_key",
 		"serial",
 		"token",
 		"url",
 		"username",
-		"aws.region",
-		"aws.account_id",
-		"aws.access_key",
-		"aws.secret_access_key",
 	}
 }
 
@@ -94,6 +85,8 @@ func (c Card) GetValue(in string) (out string) {
 	switch in {
 	case "certificate":
 		out = c.Certificate
+	case "database":
+		out = c.Database
 	case "email":
 		out = c.Email
 	case "host":
@@ -112,6 +105,8 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.RecoveryCodes
 	case "recovery_key":
 		out = c.RecoveryKey
+	case "schema":
+		out = c.Schema
 	case "secret_key":
 		out = c.SecretKey
 	case "serial":
@@ -139,6 +134,8 @@ func (c *Card) SetValue(key, value string) {
 	switch key {
 	case "certificate":
 		c.Certificate = value
+	case "database":
+		c.Database = value
 	case "email":
 		c.Email = value
 	case "host":
@@ -157,6 +154,8 @@ func (c *Card) SetValue(key, value string) {
 		c.RecoveryCodes = value
 	case "recovery_key":
 		c.RecoveryKey = value
+	case "schema":
+		c.Schema = value
 	case "secret_key":
 		c.SecretKey = value
 	case "serial":
