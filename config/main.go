@@ -21,9 +21,9 @@ func GetPublicKey() string {
 }
 
 func HasNotPrivateKey() bool {
-	return GetPrivateKey() != ""
+	return GetPrivateKey() == ""
 }
 
 func HasNotPublicKey() bool {
-	return GetPublicKey() != ""
+	return GetPublicKey() == ""
 }

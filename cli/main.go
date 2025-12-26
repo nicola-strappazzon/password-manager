@@ -17,6 +17,7 @@ import (
 
 func Load() {
 	var rootCmd = &cobra.Command{
+		SilenceUsage:      true,
 		Use:               "pm",
 		Long:              "This is another Unix-style password manager written in Go.",
 		PersistentPreRunE: PersistentPreRunE,
