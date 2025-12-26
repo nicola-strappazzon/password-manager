@@ -28,3 +28,7 @@ func (File) Load(in string) (out File) {
 	out.Content = base64.Encode(file.ReadInBytes(in))
 	return
 }
+
+func (f File) Size() (out uint64) {
+	return uint64(len(f.Decode()))
+}

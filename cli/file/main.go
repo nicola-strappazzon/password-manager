@@ -12,6 +12,7 @@ import (
 	"github.com/nicola-strappazzon/pm/path"
 	"github.com/nicola-strappazzon/pm/term"
 
+	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )
 
@@ -105,6 +106,14 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			fmt.Fprintf(cmd.OutOrStdout(), "Deleted file %s from the GPG-encrypted container %s.\n", fileName, p.Path())
 		} else {
 			return fmt.Errorf("File %s not exists; operation aborted.", fileName)
+		}
+	}
+
+	if flagList {
+		fmt.Fprintf(cmd.OutOrStdout(), "Files inside %s:\n", p.Path())
+
+		for _, file := range tmpCard.Files {
+			fmt.Fprintf(cmd.OutOrStdout(), " - %s (%s)\n", file.Name, humanize.Bytes(file.Size()))
 		}
 	}
 
