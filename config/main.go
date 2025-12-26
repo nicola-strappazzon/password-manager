@@ -8,27 +8,22 @@ import (
 
 const DATA_DIR = ".password-manager"
 
-// func GetHomeDir() string {
-// 	base, err := os.UserHomeDir()
-// 	check.Check(err)
-
-// 	return base
-// }
-
-// rename to GetAbsolutePath
-func GetDataDirectoryFrom(in string) string {
-	// return path.Join(GetHomeDir(), env.Get("PM_PATH", DATA_DIR), in)
+func GetPath(in string) string {
 	return path.Join(env.Get("PM_PATH", DATA_DIR), in)
 }
 
-func GetDataDirectory() string {
-	return GetDataDirectoryFrom("")
-}
-
-func GetPrivateKeyPath() string {
+func GetPrivateKey() string {
 	return env.Get("PM_PRIVATEKEY", "")
 }
 
-func GetPublicKeyPath() string {
+func GetPublicKey() string {
 	return env.Get("PM_PUBLICKEY", "")
+}
+
+func HasNotPrivateKey() bool {
+	return GetPrivateKey() != ""
+}
+
+func HasNotPublicKey() bool {
+	return GetPublicKey() != ""
 }

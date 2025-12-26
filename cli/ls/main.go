@@ -21,5 +21,5 @@ func NewCommand() (cmd *cobra.Command) {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
-	explorer.PrintTree(config.GetDataDirectoryFrom(arguments.First(args)))
+	explorer.PrintTree(config.GetPath(arguments.First(args)))
 }

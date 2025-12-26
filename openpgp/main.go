@@ -13,7 +13,7 @@ func Decrypt(passphrase, path string) string {
 
 	privateKey, err := crypto.NewPrivateKeyFromArmored(
 		file.ReadInString(
-			config.GetPrivateKeyPath(),
+			config.GetPrivateKey(),
 		),
 		[]byte(passphrase),
 	)
@@ -38,7 +38,7 @@ func Encrypt(in string) []byte {
 
 	publicKey, err := crypto.NewKeyFromArmored(
 		file.ReadInString(
-			config.GetPublicKeyPath(),
+			config.GetPublicKey(),
 		),
 	)
 	check.Check(err)

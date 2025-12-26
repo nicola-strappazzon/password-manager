@@ -11,7 +11,7 @@ import (
 )
 
 func Directories() (dirs []string, err error) {
-	basePath := config.GetDataDirectory()
+	basePath := config.GetPath("")
 
 	err = filepath.WalkDir(basePath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -39,7 +39,7 @@ func Directories() (dirs []string, err error) {
 }
 
 func DirectoriesAndFiles() (list []string, err error) {
-	basePath := config.GetDataDirectory()
+	basePath := config.GetPath("")
 
 	err = filepath.WalkDir(basePath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
