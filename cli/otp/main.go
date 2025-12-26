@@ -54,7 +54,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	))
 
 	if tmpCard.CheckOTP() {
-		fmt.Fprintf(cmd.OutOrStdout(), "This card dont have OTP.\n")
+		fmt.Fprintf(cmd.OutOrStdout(), "The %s card does not have an OTP token.\n", p.Path())
 		return
 	}
 
