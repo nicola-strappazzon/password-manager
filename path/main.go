@@ -42,11 +42,11 @@ func (p Path) BaseName() string {
 }
 
 func (p Path) Full() string {
-	return filepath.Clean(path.Join(config.GetDataDirectory(), p.Directory(), p.Name()))
+	return filepath.Clean(path.Join(config.GetPath(""), p.Directory(), p.Name()))
 }
 
 func (p Path) Absolute() string {
-	return filepath.Clean(path.Join(config.GetDataDirectory(), p.Directory()))
+	return filepath.Clean(path.Join(config.GetPath(""), p.Directory()))
 }
 
 func (p Path) IsDirectory() bool {
