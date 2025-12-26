@@ -3,16 +3,21 @@ package card
 import (
 	"log"
 
+	"github.com/nicola-strappazzon/pm/file"
+	"github.com/nicola-strappazzon/pm/openpgp"
+
 	"github.com/goccy/go-yaml"
 )
 
 type Card struct {
 	Certificate   string `yaml:"certificate"`
 	Email         string `yaml:"email"`
+	Files         Files  `yaml:"files"`
 	Host          string `yaml:"host"`
 	Name          string `yaml:"name"`
 	Notes         string `yaml:"notes"`
 	OTP           string `yaml:"otp"`
+	Path          string
 	Password      string `yaml:"password"`
 	Port          string `yaml:"port"`
 	RecoveryCodes string `yaml:"recovery_codes"`
@@ -37,6 +42,19 @@ func New(in string) (c Card) {
 
 	return
 }
+
+// func (c Card) Parser(in string) {
+// 	if err := yaml.Unmarshal([]byte(in), &c); err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
+
+// func (c Card) Load(passphrase string) {
+// 	c.Parser(openpgp.Decrypt(
+// 		passphrase,
+// 		c.Path,
+// 	))
+// }
 
 func (c Card) ToString() string {
 	out, err := yaml.Marshal(&c)
@@ -158,4 +176,12 @@ func (c *Card) SetValue(key, value string) {
 	case "aws.secret_access_key":
 		c.AWS.SecretAccessKey = value
 	}
+}
+
+func (c Card) CheckOTP() bool {
+	return c.OTP == ""
+}
+
+func (c *Card) Save() {
+	file.Save(c.Path, openpgp.Encrypt(c.ToString()))
 }

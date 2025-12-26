@@ -9,15 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCommand() *cobra.Command {
-	var cmd = &cobra.Command{
+func NewCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
 		Use:               "ls",
 		Short:             "List all encrypted items in tree format.",
 		Run:               RunCommand,
 		ValidArgsFunction: completion.SuggestDirectories,
 	}
 
-	return cmd
+	return
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {

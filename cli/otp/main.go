@@ -7,11 +7,10 @@ import (
 	"github.com/nicola-strappazzon/pm/card"
 	"github.com/nicola-strappazzon/pm/clipboard"
 	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/config"
 	"github.com/nicola-strappazzon/pm/explorer"
-	"github.com/nicola-strappazzon/pm/file"
 	"github.com/nicola-strappazzon/pm/openpgp"
 	"github.com/nicola-strappazzon/pm/otp"
+	"github.com/nicola-strappazzon/pm/path"
 	"github.com/nicola-strappazzon/pm/term"
 
 	"github.com/spf13/cobra"
@@ -33,38 +32,39 @@ func NewCommand() (cmd *cobra.Command) {
 	}
 
 	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy OTP code to clipboard")
-	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
 	return
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
-	var v string
+	var otpValue string
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+	var tmpCard card.Card
 
-	if len(args) == 0 {
-		cmd.Help()
+	if p.IsNotFile() {
+		explorer.PrintTree(p.Absolute())
 		return
 	}
 
-	if file.IsDir(config.GetDataDirectoryFrom(arguments.First(args))) {
-		explorer.PrintTree(config.GetDataDirectoryFrom(arguments.First(args)))
-		return
-	}
-
-	var b = openpgp.Decrypt(
+	tmpCard = card.New(openpgp.Decrypt(
 		term.ReadPassword("Passphrase: ", flagPassphrase),
-		fmt.Sprintf("%s.gpg", config.GetDataDirectoryFrom(arguments.First(args))),
-	)
+		p.Full(),
+	))
 
-	var c = card.New(b)
+	if tmpCard.CheckOTP() {
+		fmt.Fprintf(cmd.OutOrStdout(), "This card dont have OTP.\n")
+		return
+	}
 
-	v = otp.Get(c.OTP)
+	otpValue = otp.Get(tmpCard.OTP)
 
 	if flagCopy {
-		clipboard.Write(v)
-		fmt.Fprintln(cmd.OutOrStdout(), fmt.Sprintf("Copied OTP code for %s to clipboard.", arguments.First(args)))
+		clipboard.Write(otpValue)
+		fmt.Fprintf(cmd.OutOrStdout(), "Copied OTP code for %s to clipboard.\n", p.Path())
 		return
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), v)
+	fmt.Fprintln(cmd.OutOrStdout(), otpValue)
 }

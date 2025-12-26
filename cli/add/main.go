@@ -2,12 +2,14 @@ package add
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/nicola-strappazzon/pm/arguments"
 	"github.com/nicola-strappazzon/pm/card"
 	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/file"
+	"github.com/nicola-strappazzon/pm/explorer"
 	"github.com/nicola-strappazzon/pm/openpgp"
+	"github.com/nicola-strappazzon/pm/path"
 	"github.com/nicola-strappazzon/pm/term"
 
 	"github.com/spf13/cobra"
@@ -17,8 +19,8 @@ var flagField string
 var flagPassphrase string
 var flagValue string
 
-func NewCommand() *cobra.Command {
-	var cmd = &cobra.Command{
+func NewCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
 		Use:   "add",
 		Short: "Add or update an encrypted item.",
 		Example: "  pm add <TAB>\n" +
@@ -30,20 +32,33 @@ func NewCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Field name to set or update...")
 	cmd.Flags().StringVarP(&flagValue, "value", "v", "", "Value to assign to the field")
-	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG file")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
 	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
 
-	return cmd
+	return
 }
 
 func PreRun(cmd *cobra.Command, args []string) error {
-	fields := (&card.Card{}).Fields()
+	// var pathCard = arguments.First(args)
+	// var p path.Path = path.Path(pathCard)
 	field, _ := cmd.Flags().GetString("field")
 	value, _ := cmd.Flags().GetString("value")
 
-	if NotInSlice(field, fields) {
-		return fmt.Errorf("Invalid field: %s", field)
+	// if p.IsInvalid() {
+	// 	return fmt.Errorf("Invalid path. Allowed characters: letters, numbers, '-' and '_'. The path must not end with '/'.")
+	// }
+
+	if NotInSlice(field) {
+		return fmt.Errorf("Invalid field: %s.", field)
+	}
+
+	if field == "" {
+		return fmt.Errorf("Require to specify field name with --field <name>.")
+	}
+
+	if field != "" && value == "" {
+		return fmt.Errorf("Require to specify value for field %s.", field)
 	}
 
 	if field == "password" && value != "" {
@@ -54,38 +69,31 @@ func PreRun(cmd *cobra.Command, args []string) error {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) {
-	var c = card.Card{}
-	var p = arguments.First(args)
+	var tmpCard = card.Card{}
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
 
-	if !file.Valid(p) {
-		fmt.Println("Invalid path. Allowed characters: letters, numbers, '-' and '_'. The path must not end with '/'.")
+	if p.IsNotFile() {
+		explorer.PrintTree(p.Absolute())
 		return
 	}
 
-	p = file.AbsolutePath(p)
-	p = file.AddExt(p)
-
-	if !file.IsDir(p) && file.Exist(p) {
-		c = card.New(openpgp.Decrypt(
+	if p.IsFile() {
+		tmpCard = card.New(openpgp.Decrypt(
 			term.ReadPassword("Passphrase: ", flagPassphrase),
-			p,
+			p.Full(),
 		))
 	}
 
 	if flagField == "password" {
-		c.Password = term.ReadPassword(fmt.Sprintf("Enter password for %s: ", file.Name(p)), "")
+		tmpCard.Password = term.ReadPassword(fmt.Sprintf("Enter password for %s: ", p.Path()), "")
 	} else {
-		c.SetValue(flagField, flagValue)
+		tmpCard.SetValue(flagField, flagValue)
 	}
 
-	file.Save(p, openpgp.Encrypt(c.ToString()))
+	tmpCard.Save()
 }
 
-func NotInSlice(s string, list []string) bool {
-	for _, v := range list {
-		if v == s {
-			return false
-		}
-	}
-	return true
+func NotInSlice(s string) bool {
+	return !slices.Contains((&card.Card{}).Fields(), s)
 }
