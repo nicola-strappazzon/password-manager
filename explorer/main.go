@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nicola-strappazzon/pm/config"
+	"github.com/nicola-strappazzon/password-manager/config"
 )
 
 func Directories() (dirs []string, err error) {

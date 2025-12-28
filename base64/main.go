@@ -3,7 +3,7 @@ package base64
 import (
 	"encoding/base64"
 
-	"github.com/nicola-strappazzon/pm/check"
+	"github.com/nicola-strappazzon/password-manager/check"
 )
 
 func Decode(in string) (out []byte) {

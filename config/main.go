@@ -3,7 +3,7 @@ package config
 import (
 	"path"
 
-	"github.com/nicola-strappazzon/pm/env"
+	"github.com/nicola-strappazzon/password-manager/env"
 )
 
 const DATA_DIR = ".password-manager"

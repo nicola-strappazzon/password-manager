@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/nicola-strappazzon/pm/base64"
-	"github.com/nicola-strappazzon/pm/check"
-	"github.com/nicola-strappazzon/pm/file"
+	"github.com/nicola-strappazzon/password-manager/base64"
+	"github.com/nicola-strappazzon/password-manager/check"
+	"github.com/nicola-strappazzon/password-manager/file"
 )
 
 type File struct {

@@ -3,7 +3,7 @@ package otp
 import (
 	"time"
 
-	"github.com/nicola-strappazzon/pm/check"
+	"github.com/nicola-strappazzon/password-manager/check"
 
 	"github.com/pquerna/otp/totp"
 )

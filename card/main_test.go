@@ -3,7 +3,7 @@ package card_test
 import (
 	"testing"
 
-	"github.com/nicola-strappazzon/pm/card"
+	"github.com/nicola-strappazzon/password-manager/card"
 
 	"github.com/stretchr/testify/assert"
 )

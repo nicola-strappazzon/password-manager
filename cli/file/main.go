@@ -3,14 +3,14 @@ package file
 import (
 	"fmt"
 
-	"github.com/nicola-strappazzon/pm/arguments"
-	"github.com/nicola-strappazzon/pm/card"
-	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/explorer"
-	"github.com/nicola-strappazzon/pm/file"
-	"github.com/nicola-strappazzon/pm/openpgp"
-	"github.com/nicola-strappazzon/pm/path"
-	"github.com/nicola-strappazzon/pm/term"
+	"github.com/nicola-strappazzon/password-manager/arguments"
+	"github.com/nicola-strappazzon/password-manager/card"
+	"github.com/nicola-strappazzon/password-manager/completion"
+	"github.com/nicola-strappazzon/password-manager/explorer"
+	"github.com/nicola-strappazzon/password-manager/file"
+	"github.com/nicola-strappazzon/password-manager/openpgp"
+	"github.com/nicola-strappazzon/password-manager/path"
+	"github.com/nicola-strappazzon/password-manager/term"
 
 	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"

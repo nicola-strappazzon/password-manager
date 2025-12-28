@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/nicola-strappazzon/pm/clipboard"
+	"github.com/nicola-strappazzon/password-manager/clipboard"
 
 	"github.com/spf13/cobra"
 )

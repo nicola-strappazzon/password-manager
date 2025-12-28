@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/nicola-strappazzon/pm/check"
+	"github.com/nicola-strappazzon/password-manager/check"
 )
 
 // var validName = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)

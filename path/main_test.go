@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nicola-strappazzon/pm/path"
+	"github.com/nicola-strappazzon/password-manager/path"
 
 	"github.com/stretchr/testify/assert"
 )

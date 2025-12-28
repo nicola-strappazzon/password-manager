@@ -9,7 +9,7 @@ import (
 
 	// "regexp"
 
-	"github.com/nicola-strappazzon/pm/config"
+	"github.com/nicola-strappazzon/password-manager/config"
 )
 
 // personal/                                             <-- Directory, cli

@@ -1,9 +1,9 @@
 package openpgp
 
 import (
-	"github.com/nicola-strappazzon/pm/check"
-	"github.com/nicola-strappazzon/pm/config"
-	"github.com/nicola-strappazzon/pm/file"
+	"github.com/nicola-strappazzon/password-manager/check"
+	"github.com/nicola-strappazzon/password-manager/config"
+	"github.com/nicola-strappazzon/password-manager/file"
 
 	"github.com/ProtonMail/gopenpgp/v3/crypto"
 )

@@ -3,14 +3,14 @@ package cli
 import (
 	"fmt"
 
-	"github.com/nicola-strappazzon/pm/cli/add"
-	"github.com/nicola-strappazzon/pm/cli/completion"
-	"github.com/nicola-strappazzon/pm/cli/file"
-	"github.com/nicola-strappazzon/pm/cli/generate"
-	"github.com/nicola-strappazzon/pm/cli/ls"
-	"github.com/nicola-strappazzon/pm/cli/otp"
-	"github.com/nicola-strappazzon/pm/cli/show"
-	"github.com/nicola-strappazzon/pm/config"
+	"github.com/nicola-strappazzon/password-manager/cli/add"
+	"github.com/nicola-strappazzon/password-manager/cli/completion"
+	"github.com/nicola-strappazzon/password-manager/cli/file"
+	"github.com/nicola-strappazzon/password-manager/cli/generate"
+	"github.com/nicola-strappazzon/password-manager/cli/ls"
+	"github.com/nicola-strappazzon/password-manager/cli/otp"
+	"github.com/nicola-strappazzon/password-manager/cli/show"
+	"github.com/nicola-strappazzon/password-manager/config"
 
 	"github.com/spf13/cobra"
 )

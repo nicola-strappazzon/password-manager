@@ -3,7 +3,7 @@ package explorer_test
 import (
 	"testing"
 
-	"github.com/nicola-strappazzon/pm/explorer"
+	"github.com/nicola-strappazzon/password-manager/explorer"
 
 	"github.com/stretchr/testify/assert"
 )

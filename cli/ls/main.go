@@ -1,10 +1,10 @@
 package ls
 
 import (
-	"github.com/nicola-strappazzon/pm/arguments"
-	"github.com/nicola-strappazzon/pm/completion"
-	"github.com/nicola-strappazzon/pm/config"
-	"github.com/nicola-strappazzon/pm/explorer"
+	"github.com/nicola-strappazzon/password-manager/arguments"
+	"github.com/nicola-strappazzon/password-manager/completion"
+	"github.com/nicola-strappazzon/password-manager/config"
+	"github.com/nicola-strappazzon/password-manager/explorer"
 
 	"github.com/spf13/cobra"
 )
