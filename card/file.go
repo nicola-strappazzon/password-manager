@@ -1,11 +1,7 @@
 package card
 
 import (
-	"os"
-	"path/filepath"
-
 	"github.com/nicola-strappazzon/password-manager/base64"
-	"github.com/nicola-strappazzon/password-manager/check"
 	"github.com/nicola-strappazzon/password-manager/file"
 )
 
@@ -15,8 +11,7 @@ type File struct {
 }
 
 func (f File) Save(in string) {
-	os.MkdirAll(filepath.Dir(in), 0700)
-	check.Check(os.WriteFile(in, f.Decode(), 0600))
+	file.Save(in, f.Decode())
 }
 
 func (f File) Decode() (out []byte) {
