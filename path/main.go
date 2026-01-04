@@ -6,8 +6,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-
-	// "regexp"
+	"unicode"
 
 	"github.com/nicola-strappazzon/password-manager/config"
 )
@@ -21,8 +20,6 @@ import (
 // gpg                                                   <-- Extencion
 
 type Path string
-
-// var validName = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 
 func (p Path) Path() string {
 	return string(p)
@@ -70,20 +67,13 @@ func (p Path) IsFile() bool {
 	return info.Mode().IsRegular()
 }
 
-// func (p Path) IsInvalid() bool {
-// 	if p.Path() == "." || p.Path() == "/" {
-// 		return false
-// 	}
+func (p Path) IsInvalid() bool {
+	for _, r := range p.Path() {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '/' || r == '-' || r == '_' {
+			continue
+		}
+		return true
+	}
 
-// 	parts := strings.Split(p.Path(), string(filepath.Separator))
-// 	for _, part := range parts {
-// 		if part == "" {
-// 			return false
-// 		}
-// 		if !validName.MatchString(part) {
-// 			return false
-// 		}
-// 	}
-
-// 	return true
-// }
+	return false
+}

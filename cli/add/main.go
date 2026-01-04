@@ -40,25 +40,34 @@ func NewCommand() (cmd *cobra.Command) {
 }
 
 func PreRun(cmd *cobra.Command, args []string) error {
-	// var pathCard = arguments.First(args)
-	// var p path.Path = path.Path(pathCard)
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+
 	field, _ := cmd.Flags().GetString("field")
 	value, _ := cmd.Flags().GetString("value")
 
-	// if p.IsInvalid() {
-	// 	return fmt.Errorf("Invalid path. Allowed characters: letters, numbers, '-' and '_'. The path must not end with '/'.")
-	// }
+	if pathCard == "" {
+		return fmt.Errorf("Require to specify path.")
+	}
 
-	if NotInSlice(field) {
-		return fmt.Errorf("Invalid field: %s.", field)
+	if p.IsInvalid() {
+		return fmt.Errorf("Invalid path. Allowed characters: letters and numbers, not '.', '-' and '_'. The path must not end with '/'.")
 	}
 
 	if field == "" {
-		return fmt.Errorf("Require to specify field name with --field <name>.")
+		return fmt.Errorf("Require to specify field name with --field <name>")
+	}
+
+	if value == "" {
+		return fmt.Errorf("Require to specify value for field %s with --value <value>", field)
+	}
+
+	if NotInSlice(field) {
+		return fmt.Errorf("Invalid field: %s", field)
 	}
 
 	if field != "" && value == "" {
-		return fmt.Errorf("Require to specify value for field %s.", field)
+		return fmt.Errorf("Require to specify value for field %s with --value <value>", field)
 	}
 
 	if field == "password" && value != "" {
@@ -77,6 +86,8 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		explorer.PrintTree(p.Absolute())
 		return
 	}
+
+	// fmt.Println(p.IsFile())
 
 	if p.IsFile() {
 		tmpCard = card.New(openpgp.Decrypt(

@@ -68,29 +68,30 @@ func TestIsDirectory(t *testing.T) {
 
 	f, err := os.CreateTemp(t.TempDir(), "*-foo.gpg")
 	assert.NoError(t, err)
-	// t.Log(f.Name())
 
 	var tf path.Path = path.Path(f.Name())
-	// t.Log(tf.Directory())
 	assert.False(t, tf.IsDirectory())
 }
 
 func TestIsFile(t *testing.T) {
-	// var d string = t.TempDir()
-	// var s string = filepath.Join(d, "test")
-	// var p path.Path = path.Path("foo")
+	var p path.Path = "foo"
+	assert.False(t, p.IsInvalid())
 
-	// t.Setenv("PM_PATH", d)
-	// t.Log(d)
-	// t.Log(p.Directory())
-	// assert.NoError(t, os.Mkdir(s, 0o755))
-	// assert.False(t, p.IsDirectory())
+	p = "test/foo"
+	assert.False(t, p.IsInvalid())
 
-	// f, err := os.CreateTemp(t.TempDir(), "foo.gpg")
-	// assert.NoError(t, err)
-	// t.Log(f.Name())
+	p = "test/foo/"
+	assert.False(t, p.IsInvalid())
 
-	// var tf path.Path = path.Path(f.Name())
-	// t.Log(tf.Full())
-	// assert.True(t, tf.IsFile())
+	p = "test/foo-bar"
+	assert.False(t, p.IsInvalid())
+
+	p = "test/foo_bar"
+	assert.False(t, p.IsInvalid())
+
+	p = "test/foo.txt"
+	assert.True(t, p.IsInvalid())
+
+	p = "test-foo.txt"
+	assert.True(t, p.IsInvalid())
 }
