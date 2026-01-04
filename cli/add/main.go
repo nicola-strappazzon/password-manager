@@ -7,7 +7,6 @@ import (
 	"github.com/nicola-strappazzon/password-manager/arguments"
 	"github.com/nicola-strappazzon/password-manager/card"
 	"github.com/nicola-strappazzon/password-manager/completion"
-	"github.com/nicola-strappazzon/password-manager/explorer"
 	"github.com/nicola-strappazzon/password-manager/openpgp"
 	"github.com/nicola-strappazzon/password-manager/path"
 	"github.com/nicola-strappazzon/password-manager/term"
@@ -54,20 +53,8 @@ func PreRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("Invalid path. Allowed characters: letters and numbers, not '.', '-' and '_'. The path must not end with '/'.")
 	}
 
-	if field == "" {
-		return fmt.Errorf("Require to specify field name with --field <name>")
-	}
-
-	if value == "" {
-		return fmt.Errorf("Require to specify value for field %s with --value <value>", field)
-	}
-
 	if NotInSlice(field) {
 		return fmt.Errorf("Invalid field: %s", field)
-	}
-
-	if field != "" && value == "" {
-		return fmt.Errorf("Require to specify value for field %s with --value <value>", field)
 	}
 
 	if field == "password" && value != "" {
@@ -82,13 +69,6 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 
-	if p.IsNotFile() {
-		explorer.PrintTree(p.Absolute())
-		return
-	}
-
-	// fmt.Println(p.IsFile())
-
 	if p.IsFile() {
 		tmpCard = card.New(openpgp.Decrypt(
 			term.ReadPassword("Passphrase: ", flagPassphrase),
@@ -102,6 +82,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		tmpCard.SetValue(flagField, flagValue)
 	}
 
+	tmpCard.Path = p.Full()
 	tmpCard.Save()
 }
 
