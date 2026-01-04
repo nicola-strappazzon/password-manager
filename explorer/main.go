@@ -127,8 +127,13 @@ func PrintTree(root string) error {
 
 		if isLast {
 			fileName := strings.TrimSuffix(d.Name(), ".gpg")
-			fmt.Println(prefix + "└── " + fileName)
 			lastAtDepth[depth] = true
+
+			if d.IsDir() {
+				fmt.Println(prefix + "└── " + fmt.Sprintf("\033[1;37m%s\033[0m", d.Name()))
+			} else {
+				fmt.Println(prefix + "└── " + fileName)
+			}
 		} else if d.IsDir() {
 			fmt.Println(prefix + "├── " + fmt.Sprintf("\033[1;37m%s\033[0m", d.Name()))
 			lastAtDepth[depth] = false
