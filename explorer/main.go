@@ -77,10 +77,10 @@ func DirectoriesAndFiles() (list []string, err error) {
 	return
 }
 
-func PrintTree(root string) error {
+func PrintTree(root string) (out string, err error) {
 	var lastAtDepth = map[int]bool{}
 
-	return filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	return out, filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -98,7 +98,7 @@ func PrintTree(root string) error {
 		}
 
 		if path == root {
-			fmt.Printf("\033[1;37m%s\033[0m\n", "Password Store")
+			out += fmt.Sprintf("\033[1;37m%s\033[0m\n", "Password Store")
 			return nil
 		}
 
@@ -130,16 +130,16 @@ func PrintTree(root string) error {
 			lastAtDepth[depth] = true
 
 			if d.IsDir() {
-				fmt.Println(prefix + "└── " + fmt.Sprintf("\033[1;37m%s\033[0m", d.Name()))
+				out += fmt.Sprintf("%s%s \033[1;37m%s\033[0m\n", prefix, "└──", d.Name())
 			} else {
-				fmt.Println(prefix + "└── " + fileName)
+				out += fmt.Sprintf("%s%s %s\n", prefix, "└──", fileName)
 			}
 		} else if d.IsDir() {
-			fmt.Println(prefix + "├── " + fmt.Sprintf("\033[1;37m%s\033[0m", d.Name()))
+			out += fmt.Sprintf("%s%s \033[1;37m%s\033[0m\n", prefix, "├──", d.Name())
 			lastAtDepth[depth] = false
 		} else {
 			fileName := strings.TrimSuffix(d.Name(), ".gpg")
-			fmt.Println(prefix + "├── " + fileName)
+			out += fmt.Sprintf("%s%s %s\n", prefix, "├──", fileName)
 			lastAtDepth[depth] = false
 		}
 

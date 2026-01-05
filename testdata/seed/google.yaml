@@ -1,0 +1,25 @@
+---
+certificate: ""
+database: ""
+email: ""
+files: []
+host: ""
+name: ""
+notes: ""
+otp:
+password: MyStr0ngP@s3w0rd
+path: ""
+port: ""
+recovery_codes: ""
+recovery_key: ""
+schema: ""
+secret_key: ""
+serial: ""
+token: ""
+url: "https://mail.google.com"
+username: golang.test@gmail.com
+aws:
+  region: ""
+  account_id: ""
+  access_key: ""
+  secret_access_key: ""
