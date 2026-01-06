@@ -106,7 +106,7 @@ func PrintTree(root string) (out string, err error) {
 		depth := strings.Count(rel, string(filepath.Separator))
 
 		prefix := ""
-		for i := 0; i < depth; i++ {
+		for i := range depth {
 			if lastAtDepth[i] {
 				prefix += "    "
 			} else {
