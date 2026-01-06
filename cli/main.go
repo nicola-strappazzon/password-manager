@@ -21,7 +21,7 @@ func Load() {
 		Use:               "pm",
 		Long:              "This is another Unix-style password manager written in Go.",
 		PersistentPreRunE: PersistentPreRunE,
-		Run:               RunCommand,
+		RunE:              RunCommand,
 		CompletionOptions: cobra.CompletionOptions{
 			DisableDefaultCmd: true,
 		},
@@ -49,6 +49,6 @@ func PersistentPreRunE(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func RunCommand(cmd *cobra.Command, args []string) {
-	ls.NewCommand().Run(cmd, args)
+func RunCommand(cmd *cobra.Command, args []string) error {
+	return ls.NewCommand().RunE(cmd, args)
 }
