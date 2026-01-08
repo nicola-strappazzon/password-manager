@@ -1,7 +1,8 @@
 package config
 
 import (
-	"path"
+	"os"
+	"path/filepath"
 
 	"github.com/nicola-strappazzon/password-manager/env"
 )
@@ -9,7 +10,13 @@ import (
 const DATA_DIR = ".password-manager"
 
 func GetPath(in string) string {
-	return path.Join(env.Get("PM_PATH", DATA_DIR), in)
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	base := filepath.Join(home, DATA_DIR)
+	return filepath.Join(base, in)
 }
 
 func GetPrivateKey() string {
