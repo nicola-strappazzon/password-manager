@@ -7,15 +7,16 @@ import (
 	"github.com/nicola-strappazzon/password-manager/env"
 )
 
-const DATA_DIR = ".password-manager"
+var DataDir = ".password-manager"
+var UserHomeDir = os.UserHomeDir
 
 func GetPath(in string) string {
-	home, err := os.UserHomeDir()
+	home, err := UserHomeDir()
 	if err != nil {
 		panic(err)
 	}
 
-	base := filepath.Join(home, DATA_DIR)
+	base := filepath.Join(home, DataDir)
 	return filepath.Join(base, in)
 }
 
