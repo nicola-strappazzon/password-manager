@@ -10,6 +10,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/cli/ls"
 	"github.com/nicola-strappazzon/password-manager/cli/otp"
 	"github.com/nicola-strappazzon/password-manager/cli/show"
+	"github.com/nicola-strappazzon/password-manager/cli/version"
 	"github.com/nicola-strappazzon/password-manager/config"
 
 	"github.com/spf13/cobra"
@@ -34,6 +35,7 @@ func Load() {
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(otp.NewCommand())
 	rootCmd.AddCommand(show.NewCommand())
+	rootCmd.AddCommand(version.NewCommand())
 	rootCmd.Execute()
 }
 
