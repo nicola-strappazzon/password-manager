@@ -5,10 +5,34 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/nicola-strappazzon/password-manager/config"
 	"github.com/nicola-strappazzon/password-manager/path"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestMain(m *testing.M) {
+	var err error
+
+	testDir, err := os.MkdirTemp("", "")
+	if err != nil {
+		panic(err)
+	}
+
+	config.DataDir = ""
+
+	orig := config.UserHomeDir
+	defer func() { config.UserHomeDir = orig }()
+
+	config.UserHomeDir = func() (string, error) {
+		return testDir, nil
+	}
+
+	code := m.Run()
+
+	os.RemoveAll(testDir)
+	os.Exit(code)
+}
 
 func TestPath(t *testing.T) {
 	var p path.Path = "test/foo"
@@ -37,31 +61,23 @@ func TestBaseName(t *testing.T) {
 }
 
 func TestAbsolute(t *testing.T) {
-	var d string = t.TempDir()
+	var d string = UserHomeDir()
 	var p path.Path = "test/foo"
-
-	t.Setenv("PM_PATH", d)
 
 	assert.Equal(t, filepath.Join(d, "test"), p.Absolute())
 }
 
 func TestFull(t *testing.T) {
-	var d string = t.TempDir()
+	var d string = UserHomeDir()
 	var p path.Path = "test/foo"
-	var s string = filepath.Join(d, "test")
 
-	t.Setenv("PM_PATH", d)
-
-	assert.NoError(t, os.Mkdir(s, 0o755))
 	assert.Equal(t, filepath.Join(d, "test/foo.gpg"), p.Full())
 }
 
 func TestIsDirectory(t *testing.T) {
-	var d string = t.TempDir()
-	var s string = filepath.Join(d, "test")
+	var d string = UserHomeDir()
 	var p path.Path = path.Path("test/foo")
-
-	t.Setenv("PM_PATH", d)
+	var s string = filepath.Join(d, "test")
 
 	assert.NoError(t, os.Mkdir(s, 0o755))
 	assert.True(t, p.IsDirectory())
@@ -94,4 +110,9 @@ func TestIsFile(t *testing.T) {
 
 	p = "test-foo.txt"
 	assert.True(t, p.IsInvalid())
+}
+
+func UserHomeDir() (out string) {
+	out, _ = config.UserHomeDir()
+	return out
 }
