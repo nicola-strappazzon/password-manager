@@ -1,0 +1,77 @@
+version: 2
+
+project_name: password-manager
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+release:
+  prerelease: false
+
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - id: linux
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - 7
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
+
+  - id: osx
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
+
+nfpms:
+  - file_name_template: "{{ .ProjectName }}_{{ .Arch }}"
+    homepage: https://github.com/nicola-strappazzon/password-manager
+    description: "password-manager is another Unix-style password manager written in Go."
+    license: GPL
+    vendor: "Nicola Strappazzon"
+    formats:
+      - deb
+      - rpm
+
+homebrew_casks:
+  - name: password-manager
+    repository:
+      owner: nicola-strappazzon
+      name: homebrew-tap
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    homepage: https://github.com/nicola-strappazzon/password-manager
+    description: "password-manager is another Unix-style password manager written in Go."
+    license: GPL
+
+archives:
+  - format: tar.gz
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ if eq .Arch "amd64" }}amd64{{ else if eq .Arch "386" }}i386{{ else }}{{ .Arch }}{{ end }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+
+checksum:
+  name_template: "checksums.sha256"
+
+snapshot:
+  version_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
