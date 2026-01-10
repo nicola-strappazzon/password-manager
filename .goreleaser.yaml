@@ -15,6 +15,7 @@ env:
 
 builds:
   - id: linux
+    use: docker
     binary: pm
     goos:
       - linux
