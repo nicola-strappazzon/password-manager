@@ -15,6 +15,7 @@ deps: ## Download dependencies
 build: ## Build binary for local operating system
 	@go env -w CGO_ENABLED="1"
 	@go generate ./...
+	@go run . completion bash > completions/pm.bash
 	@go build -ldflags "-s -w" -o pm *.go
 
 completion: ## Load completion scripts.
