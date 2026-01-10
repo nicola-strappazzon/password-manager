@@ -11,10 +11,11 @@ release:
   prerelease: false
 
 env:
-  - CGO_ENABLED=0
+  - CGO_ENABLED=1
 
 builds:
   - id: linux
+    binary: pm
     goos:
       - linux
     goarch:
@@ -29,6 +30,7 @@ builds:
       - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
 
   - id: osx
+    binary: pm
     goos:
       - darwin
     goarch:
