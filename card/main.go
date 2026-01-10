@@ -15,6 +15,8 @@ type Card struct {
 	Email         string `yaml:"email"`
 	Files         Files  `yaml:"files"`
 	Host          string `yaml:"host"`
+	IP            string `yaml:"ip"`
+	MAC           string `yaml:"mac"`
 	Name          string `yaml:"name"`
 	Notes         string `yaml:"notes"`
 	OTP           string `yaml:"otp"`
@@ -23,6 +25,7 @@ type Card struct {
 	Port          string `yaml:"port"`
 	RecoveryCodes string `yaml:"recovery_codes"`
 	RecoveryKey   string `yaml:"recovery_key"`
+	SSID          string `yaml:"ssid"`
 	Schema        string `yaml:"schema"`
 	SecretKey     string `yaml:"secret_key"`
 	Serial        string `yaml:"serial"`
@@ -65,6 +68,8 @@ func (c Card) Fields() []string {
 		"database",
 		"email",
 		"host",
+		"ip",
+		"mac",
 		"name",
 		"notes",
 		"otp",
@@ -75,6 +80,7 @@ func (c Card) Fields() []string {
 		"schema",
 		"secret_key",
 		"serial",
+		"ssid",
 		"token",
 		"url",
 		"username",
@@ -91,6 +97,10 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.Email
 	case "host":
 		out = c.Host
+	case "ip":
+		out = c.IP
+	case "mac":
+		out = c.MAC
 	case "name":
 		out = c.Name
 	case "notes":
@@ -111,6 +121,8 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.SecretKey
 	case "serial":
 		out = c.Serial
+	case "ssid":
+		out = c.SSID
 	case "token":
 		out = c.Token
 	case "url":
@@ -140,6 +152,10 @@ func (c *Card) SetValue(key, value string) {
 		c.Email = value
 	case "host":
 		c.Host = value
+	case "ip":
+		c.IP = value
+	case "mac":
+		c.MAC = value
 	case "name":
 		c.Name = value
 	case "notes":
@@ -160,6 +176,8 @@ func (c *Card) SetValue(key, value string) {
 		c.SecretKey = value
 	case "serial":
 		c.Serial = value
+	case "ssid":
+		c.SSID = value
 	case "token":
 		c.Token = value
 	case "url":
