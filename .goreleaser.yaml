@@ -8,7 +8,7 @@ before:
     - go generate ./...
 
 release:
-  prerelease: "false"
+  prerelease: false
 
 builds:
   - id: linux-amd64
