@@ -36,6 +36,8 @@ homebrew_casks:
     homepage: https://github.com/nicola-strappazzon/password-manager
     description: "password-manager is another Unix-style password manager written in Go."
     license: GPL
+    completions:
+      bash: completions/pm.bash
 
 archives:
   - formats: tar.gz
