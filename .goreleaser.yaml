@@ -42,6 +42,8 @@ homebrew_casks:
 archives:
   - formats: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - completions/*
 
 checksum:
   name_template: "checksums.sha256"
