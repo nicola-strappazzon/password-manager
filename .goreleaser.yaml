@@ -11,16 +11,42 @@ release:
   prerelease: "false"
 
 builds:
-  - id: linux
+  - id: linux-amd64
     binary: pm
     goos:
       - linux
     goarch:
       - amd64
+    env:
+      - CGO_ENABLED=1
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
+
+  - id: linux-arm64
+    binary: pm
+    goos:
+      - linux
+    goarch:
       - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
+
+  - id: linux-armv7
+    binary: pm
+    goos:
+      - linux
+    goarch:
       - arm
     goarm:
       - "7"
+    env:
+      - CGO_ENABLED=0
     flags:
       - -trimpath
     ldflags:
