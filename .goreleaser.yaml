@@ -8,7 +8,7 @@ before:
     - go generate ./...
 
 release:
-  prerelease: false
+  prerelease: "false"
 
 env:
   - CGO_ENABLED=1
@@ -20,6 +20,7 @@ builds:
       - linux
     goarch:
       - amd64
+      - arm64
 
     flags:
       - -trimpath
