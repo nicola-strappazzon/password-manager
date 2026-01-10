@@ -61,6 +61,8 @@ builds:
       - arm64
     flags:
       - -trimpath
+    env:
+      - CGO_ENABLED=1
     ldflags:
       - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
 
