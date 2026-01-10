@@ -13,7 +13,6 @@ deps: ## Download dependencies
 	@go mod download
 
 build: ## Build binary for local operating system
-	@go env -w CGO_ENABLED="1"
 	@go generate ./...
 	@go build -ldflags "-s -w" -o pm *.go
 

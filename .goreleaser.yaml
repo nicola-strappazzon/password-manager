@@ -10,9 +10,6 @@ before:
 release:
   prerelease: "false"
 
-env:
-  - CGO_ENABLED=1
-
 builds:
   - id: linux
     binary: pm
