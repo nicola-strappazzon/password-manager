@@ -48,6 +48,7 @@ func NewCommand() (cmd *cobra.Command) {
 
 	cmd.MarkFlagsMutuallyExclusive("all", "field", "qr")
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
+	cmd.MarkFlagsMutuallyExclusive("qr", "copy")
 
 	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
 
