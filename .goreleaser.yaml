@@ -15,13 +15,15 @@ env:
 
 builds:
   - id: linux
-    use: docker
     binary: pm
     goos:
       - linux
     goarch:
       - amd64
       - arm64
+      - arm
+    goarm:
+      - 7
     flags:
       - -trimpath
     ldflags:
