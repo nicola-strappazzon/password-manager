@@ -76,6 +76,8 @@ nfpms:
 
 homebrew_casks:
   - name: password-manager
+    binaries:
+      - pm
     repository:
       owner: nicola-strappazzon
       name: homebrew-tap
