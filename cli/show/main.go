@@ -1,6 +1,7 @@
 package show
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 
@@ -36,7 +37,7 @@ func NewCommand() (cmd *cobra.Command) {
 			"  pm show aws -p <passphrase> -f otp -c\n" +
 			"  pm show aws -p <passphrase> -f aws.access_key -c",
 		PreRunE:           PreRun,
-		Run:               RunCommand,
+		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
@@ -70,15 +71,25 @@ func PreRun(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func RunCommand(cmd *cobra.Command, args []string) {
+func RunCommand(cmd *cobra.Command, args []string) error {
 	var value string
 	var tmpCard card.Card
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 
-	if p.IsNotFile() {
-		explorer.PrintTree(p.Absolute())
-		return
+	if p.ExistDirectory() {
+		out, err := explorer.PrintTree(p.Absolute())
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(cmd.OutOrStdout(), out)
+
+		return nil
+	}
+
+	if !p.Exists() {
+		return errors.New("No such file or directory.")
 	}
 
 	tmpCard = card.New(openpgp.Decrypt(
@@ -114,15 +125,17 @@ func RunCommand(cmd *cobra.Command, args []string) {
 			flagField,
 			p.Path(),
 		)
-		return
+		return nil
 	}
 
 	if flagQR {
 		qr.Generate(value)
-		return
+		return nil
 	}
 
 	fmt.Fprintln(cmd.OutOrStdout(), value)
+
+	return nil
 }
 
 func NotInSlice(s string, list []string) bool {

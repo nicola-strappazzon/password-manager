@@ -77,3 +77,17 @@ func (p Path) IsInvalid() bool {
 
 	return false
 }
+
+func (p Path) Exists() bool {
+	info, err := os.Stat(config.GetPath(string(p)))
+	if err == nil && info.IsDir() {
+		return true
+	}
+
+	return p.IsFile()
+}
+
+func (p Path) ExistDirectory() bool {
+	info, err := os.Stat(config.GetPath(string(p)))
+	return err == nil && info.IsDir()
+}

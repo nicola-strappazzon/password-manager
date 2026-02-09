@@ -1,12 +1,13 @@
 package ls
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
 	"github.com/nicola-strappazzon/password-manager/completion"
-	"github.com/nicola-strappazzon/password-manager/config"
 	"github.com/nicola-strappazzon/password-manager/explorer"
+	"github.com/nicola-strappazzon/password-manager/path"
 
 	"github.com/spf13/cobra"
 )
@@ -23,12 +24,19 @@ func NewCommand() (cmd *cobra.Command) {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) error {
-	out, err := explorer.PrintTree(config.GetPath(arguments.First(args)))
-	if err != nil {
-		return err
-	}
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
 
-	fmt.Fprint(cmd.OutOrStdout(), out)
+	if p.Exists() {
+		out, err := explorer.PrintTree(p.Absolute())
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(cmd.OutOrStdout(), out)
+	} else {
+		return errors.New("No such file or directory.")
+	}
 
 	return nil
 }

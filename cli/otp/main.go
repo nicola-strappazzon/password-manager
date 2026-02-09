@@ -1,6 +1,7 @@
 package otp
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
@@ -27,7 +28,7 @@ func NewCommand() (cmd *cobra.Command) {
 			"  pm otp aws\n" +
 			"  pm otp aws -p <passphrase>\n" +
 			"  pm otp aws -p <passphrase> -c\n",
-		Run:               RunCommand,
+		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
@@ -37,15 +38,25 @@ func NewCommand() (cmd *cobra.Command) {
 	return
 }
 
-func RunCommand(cmd *cobra.Command, args []string) {
+func RunCommand(cmd *cobra.Command, args []string) error {
 	var otpValue string
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 	var tmpCard card.Card
 
-	if p.IsNotFile() {
-		explorer.PrintTree(p.Absolute())
-		return
+	if p.ExistDirectory() {
+		out, err := explorer.PrintTree(p.Absolute())
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(cmd.OutOrStdout(), out)
+
+		return nil
+	}
+
+	if !p.Exists() {
+		return errors.New("No such file or directory.")
 	}
 
 	tmpCard = card.New(openpgp.Decrypt(
@@ -55,7 +66,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	if tmpCard.CheckOTP() {
 		fmt.Fprintf(cmd.OutOrStdout(), "The %s card does not have an OTP token.\n", p.Path())
-		return
+		return nil
 	}
 
 	otpValue = otp.Get(tmpCard.OTP)
@@ -63,8 +74,10 @@ func RunCommand(cmd *cobra.Command, args []string) {
 	if flagCopy {
 		clipboard.Write(otpValue)
 		fmt.Fprintf(cmd.OutOrStdout(), "Copied OTP code for %s to clipboard.\n", p.Path())
-		return
+		return nil
 	}
 
 	fmt.Fprintln(cmd.OutOrStdout(), otpValue)
+
+	return nil
 }
