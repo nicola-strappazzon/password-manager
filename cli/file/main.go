@@ -55,7 +55,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	var pathCard string = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 
-	if p.IsNotFile() {
+	if p.IsDirectory() {
 		explorer.PrintTree(p.Absolute())
 		return nil
 	}
