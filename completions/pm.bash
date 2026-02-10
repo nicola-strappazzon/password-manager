@@ -429,6 +429,33 @@ _pm_completion()
     noun_aliases=()
 }
 
+_pm_edit()
+{
+    last_command="pm_edit"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--passphrase=")
+    two_word_flags+=("--passphrase")
+    two_word_flags+=("-p")
+    local_nonpersistent_flags+=("--passphrase")
+    local_nonpersistent_flags+=("--passphrase=")
+    local_nonpersistent_flags+=("-p")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    has_completion_function=1
+    noun_aliases=()
+}
+
 _pm_file()
 {
     last_command="pm_file"
@@ -681,6 +708,7 @@ _pm_root_command()
     commands=()
     commands+=("add")
     commands+=("completion")
+    commands+=("edit")
     commands+=("file")
     commands+=("generate")
     commands+=("help")

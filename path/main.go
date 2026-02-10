@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 	"unicode"
 
 	"github.com/nicola-strappazzon/password-manager/config"
@@ -33,11 +32,6 @@ func (p Path) Name() string {
 	return fmt.Sprintf("%s.gpg", filepath.Base(p.Path()))
 }
 
-func (p Path) BaseName() string {
-	base := filepath.Base(p.Path())
-	return strings.TrimSuffix(base, filepath.Ext(base))
-}
-
 func (p Path) Full() string {
 	return filepath.Clean(path.Join(config.GetPath(""), p.Directory(), p.Name()))
 }
@@ -53,10 +47,6 @@ func (p Path) IsDirectory() bool {
 	}
 
 	return info.IsDir()
-}
-
-func (p Path) IsNotFile() bool {
-	return !p.IsFile()
 }
 
 func (p Path) IsFile() bool {
@@ -79,7 +69,7 @@ func (p Path) IsInvalid() bool {
 }
 
 func (p Path) Exists() bool {
-	info, err := os.Stat(config.GetPath(string(p)))
+	info, err := os.Stat(config.GetPath(p.Path()))
 	if err == nil && info.IsDir() {
 		return true
 	}
@@ -88,6 +78,6 @@ func (p Path) Exists() bool {
 }
 
 func (p Path) ExistDirectory() bool {
-	info, err := os.Stat(config.GetPath(string(p)))
+	info, err := os.Stat(config.GetPath(p.Path()))
 	return err == nil && info.IsDir()
 }

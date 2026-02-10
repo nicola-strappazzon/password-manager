@@ -5,6 +5,7 @@ import (
 
 	"github.com/nicola-strappazzon/password-manager/cli/add"
 	"github.com/nicola-strappazzon/password-manager/cli/completion"
+	"github.com/nicola-strappazzon/password-manager/cli/edit"
 	"github.com/nicola-strappazzon/password-manager/cli/file"
 	"github.com/nicola-strappazzon/password-manager/cli/generate"
 	"github.com/nicola-strappazzon/password-manager/cli/ls"
@@ -30,6 +31,7 @@ func Load() {
 
 	rootCmd.AddCommand(add.NewCommand())
 	rootCmd.AddCommand(completion.NewCommand(rootCmd))
+	rootCmd.AddCommand(edit.NewCommand())
 	rootCmd.AddCommand(file.NewCommand())
 	rootCmd.AddCommand(generate.NewCommand())
 	rootCmd.AddCommand(ls.NewCommand())

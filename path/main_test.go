@@ -55,11 +55,6 @@ func TestName(t *testing.T) {
 	assert.Equal(t, "foo.gpg", p.Name())
 }
 
-func TestBaseName(t *testing.T) {
-	var p path.Path = "test/foo"
-	assert.Equal(t, "foo", p.BaseName())
-}
-
 func TestAbsolute(t *testing.T) {
 	var d string = UserHomeDir()
 	var p path.Path = "test/foo"
