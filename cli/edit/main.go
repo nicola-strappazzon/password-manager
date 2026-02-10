@@ -1,0 +1,73 @@
+package edit
+
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"os"
+
+	"github.com/nicola-strappazzon/password-manager/arguments"
+	"github.com/nicola-strappazzon/password-manager/card"
+	"github.com/nicola-strappazzon/password-manager/completion"
+	"github.com/nicola-strappazzon/password-manager/explorer"
+	"github.com/nicola-strappazzon/password-manager/openpgp"
+	"github.com/nicola-strappazzon/password-manager/path"
+	"github.com/nicola-strappazzon/password-manager/term"
+
+	"github.com/confluentinc/go-editor"
+	"github.com/spf13/cobra"
+)
+
+var flagPassphrase string
+
+func NewCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
+		Use:               "edit",
+		Short:             "Edit encrypted file.",
+		RunE:              RunCommand,
+		ValidArgsFunction: completion.SuggestDirectories,
+	}
+
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
+
+	return
+}
+
+func RunCommand(cmd *cobra.Command, args []string) error {
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+	var tmpCard card.Card
+
+	if p.ExistDirectory() {
+		out, err := explorer.PrintTree(p.Absolute())
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(cmd.OutOrStdout(), out)
+
+		return nil
+	}
+
+	if !p.Exists() {
+		return errors.New("No such file or directory.")
+	}
+
+	tmpCard = card.New(openpgp.Decrypt(
+		term.ReadPassword("Passphrase: ", flagPassphrase),
+		p.Full(),
+	))
+
+	original := bytes.NewBufferString(tmpCard.ToString())
+	edit := editor.NewEditor()
+	edited, path, err := edit.LaunchTempFile("example", original)
+	defer os.Remove(path)
+
+	newCard := card.New(string(edited))
+	newCard.Save()
+
+	// fmt.Println("path:", path)
+	// fmt.Println("edited", edited)
+
+	return err
+}

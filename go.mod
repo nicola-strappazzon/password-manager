@@ -20,6 +20,7 @@ require (
 	github.com/ProtonMail/go-crypto v1.3.0 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/cloudflare/circl v1.6.0 // indirect
+	github.com/confluentinc/go-editor v0.11.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
