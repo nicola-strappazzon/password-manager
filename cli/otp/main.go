@@ -72,7 +72,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	otpValue = otp.Get(tmpCard.OTP)
 
 	if flagCopy {
-		clipboard.Write(otpValue)
+		if err := clipboard.Write(otpValue); err != nil {
+			return err
+		}
+
 		fmt.Fprintf(cmd.OutOrStdout(), "Copied OTP code for %s to clipboard.\n", p.Path())
 		return nil
 	}

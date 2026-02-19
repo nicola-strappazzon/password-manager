@@ -118,13 +118,17 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	if flagCopy {
-		clipboard.Write(value)
+		if err := clipboard.Write(value); err != nil {
+			return err
+		}
+
 		fmt.Fprintf(
 			cmd.OutOrStdout(),
 			"Copied %s for %s to clipboard.\n",
 			flagField,
 			p.Path(),
 		)
+
 		return nil
 	}
 
