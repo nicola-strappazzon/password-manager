@@ -1,34 +1,24 @@
 package clipboard
 
 import (
-	"log"
+	"errors"
 	"os"
 	"runtime"
 
 	"golang.design/x/clipboard"
 )
 
-var available bool
-
-func Init() {
+// Write copies text into the system clipboard.
+func Write(text string) error {
 	if runtime.GOOS == "linux" && os.Getenv("DISPLAY") == "" {
-		log.Println("Clipboard disabled: no X11 display detected")
-		return
+		return errors.New("Clipboard disabled: no X11 display detected")
 	}
 
 	if err := clipboard.Init(); err != nil {
-		log.Fatal(err.Error())
-	}
-
-	available = true
-}
-
-// Write copies text into the system clipboard.
-func Write(text string) {
-	if !available {
-		log.Println("Clipboard not available")
-		return
+		return err
 	}
 
 	clipboard.Write(clipboard.FmtText, []byte(text))
+
+	return nil
 }
