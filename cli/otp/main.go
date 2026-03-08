@@ -23,7 +23,7 @@ var flagPassphrase string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:   "otp path/to/encrypted [flags]",
-		Short: "Generate an OTP code and optionally put it on the clipboard.",
+		Short: "Generate an OTP code and optionally copy it to the clipboard.",
 		Example: "  pm otp <TAB>\n" +
 			"  pm otp aws\n" +
 			"  pm otp aws -p <passphrase>\n" +

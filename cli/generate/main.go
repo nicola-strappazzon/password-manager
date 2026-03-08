@@ -35,7 +35,7 @@ func NewCommand() *cobra.Command {
 		Run:   RunCommand,
 	}
 
-	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
+	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy generated password to clipboard")
 	cmd.Flags().BoolVarP(&flagLowercase, "no-lowercase", "l", false, "Exclude lowercase")
 	cmd.Flags().BoolVarP(&flagNumbers, "no-numbers", "n", false, "Exclude numbers")
 	cmd.Flags().BoolVarP(&flagSymbols, "no-symbols", "s", false, "Exclude symbols")

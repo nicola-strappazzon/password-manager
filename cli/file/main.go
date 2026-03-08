@@ -37,12 +37,12 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
-	cmd.Flags().BoolVarP(&flagList, "list", "l", false, "List files stored in the container.")
-	cmd.Flags().StringVarP(&flagDelete, "delete", "d", "", "Delete a file from container.")
-	cmd.Flags().StringVarP(&flagExtract, "extract", "e", "", "Extract a file from container.")
-	cmd.Flags().StringVarP(&flagInclude, "include", "i", "", "Include a file into container.")
-	cmd.Flags().StringVarP(&flagOutput, "output", "o", "", "Output path to extract file.")
-	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file.")
+	cmd.Flags().BoolVarP(&flagList, "list", "l", false, "List files stored in the container")
+	cmd.Flags().StringVarP(&flagDelete, "delete", "d", "", "Delete a file from container")
+	cmd.Flags().StringVarP(&flagExtract, "extract", "e", "", "Extract a file from container")
+	cmd.Flags().StringVarP(&flagInclude, "include", "i", "", "Include a file into container")
+	cmd.Flags().StringVarP(&flagOutput, "output", "o", "", "Output path to extract file")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
 	cmd.MarkFlagsMutuallyExclusive("extract", "include", "list", "delete")
 	cmd.MarkFlagsMutuallyExclusive("include", "list", "delete", "output")
@@ -95,7 +95,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			tmpCard.Files.Get(card.File{Name: fileName}).Save(flagOutput)
 			fmt.Fprintf(cmd.OutOrStdout(), "Saved file %s to %s.\n", fileName, flagOutput)
 		} else {
-			return fmt.Errorf("File %s not exists; operation aborted.", fileName)
+			return fmt.Errorf("File %s does not exist; operation aborted.", fileName)
 		}
 	}
 
@@ -105,7 +105,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			tmpCard.Save()
 			fmt.Fprintf(cmd.OutOrStdout(), "Deleted file %s from the GPG-encrypted container %s.\n", fileName, p.Path())
 		} else {
-			return fmt.Errorf("File %s not exists; operation aborted.", fileName)
+			return fmt.Errorf("File %s does not exist; operation aborted.", fileName)
 		}
 	}
 

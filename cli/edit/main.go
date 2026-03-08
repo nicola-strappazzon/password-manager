@@ -23,7 +23,7 @@ var flagPassphrase string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:               "edit",
-		Short:             "Edit encrypted file.",
+		Short:             "Edit an encrypted item.",
 		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectories,
 	}
