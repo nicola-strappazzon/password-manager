@@ -15,7 +15,7 @@ func TestNewCommand_Metadata(t *testing.T) {
 	cmd := version.NewCommand()
 
 	assert.Equal(t, "version", cmd.Use)
-	assert.Equal(t, "Print version number", cmd.Short)
+	assert.Equal(t, "Print the version number", cmd.Short)
 }
 
 func TestNewCommand_PrintsVersion(t *testing.T) {

@@ -41,7 +41,7 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
-	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all decrypted file")
+	cmd.Flags().BoolVarP(&flagAll, "all", "a", false, "Show all fields of the decrypted item")
 	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy decrypted password to clipboard")
 	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
@@ -122,10 +122,15 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
+		field := flagField
+		if field == "" {
+			field = "password"
+		}
+
 		fmt.Fprintf(
 			cmd.OutOrStdout(),
 			"Copied %s for %s to clipboard.\n",
-			flagField,
+			field,
 			p.Path(),
 		)
 

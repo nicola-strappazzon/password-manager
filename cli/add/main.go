@@ -29,7 +29,7 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
-	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Field name to set or update...")
+	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Field name to set or update")
 	cmd.Flags().StringVarP(&flagValue, "value", "v", "", "Value to assign to the field")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
@@ -46,11 +46,11 @@ func PreRun(cmd *cobra.Command, args []string) error {
 	value, _ := cmd.Flags().GetString("value")
 
 	if pathCard == "" {
-		return fmt.Errorf("Require to specify path.")
+		return fmt.Errorf("A path is required.")
 	}
 
 	if p.IsInvalid() {
-		return fmt.Errorf("Invalid path. Allowed characters: letters and numbers, not '.', '-' and '_'. The path must not end with '/'.")
+		return fmt.Errorf("Invalid path. Use only letters, numbers, '-', '_', and '/'. The path must not end with '/'.")
 	}
 
 	if NotInSlice(field) {
