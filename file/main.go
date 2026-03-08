@@ -26,3 +26,8 @@ func Save(path string, content []byte) {
 	os.MkdirAll(filepath.Dir(path), 0700)
 	check.Check(os.WriteFile(path, content, 0600))
 }
+
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}

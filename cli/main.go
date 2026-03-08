@@ -10,6 +10,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/cli/generate"
 	"github.com/nicola-strappazzon/password-manager/cli/ls"
 	"github.com/nicola-strappazzon/password-manager/cli/otp"
+	"github.com/nicola-strappazzon/password-manager/cli/setup"
 	"github.com/nicola-strappazzon/password-manager/cli/show"
 	"github.com/nicola-strappazzon/password-manager/cli/version"
 	"github.com/nicola-strappazzon/password-manager/config"
@@ -36,6 +37,7 @@ func Load() {
 	rootCmd.AddCommand(generate.NewCommand())
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(otp.NewCommand())
+	rootCmd.AddCommand(setup.NewCommand())
 	rootCmd.AddCommand(show.NewCommand())
 	rootCmd.AddCommand(version.NewCommand())
 	rootCmd.Execute()
@@ -43,11 +45,11 @@ func Load() {
 
 func PersistentPreRunE(cmd *cobra.Command, args []string) error {
 	if config.HasNotPublicKey() {
-		return fmt.Errorf("Missing required environment variable: PM_PUBLICKEY")
+		return fmt.Errorf("Run 'pm setup' to configure the application.")
 	}
 
 	if config.HasNotPrivateKey() {
-		return fmt.Errorf("Missing required environment variable: PM_PRIVATEKEY")
+		return fmt.Errorf("Run 'pm setup' to configure the application.")
 	}
 
 	return nil
