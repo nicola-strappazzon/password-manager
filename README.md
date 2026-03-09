@@ -34,6 +34,8 @@ pm setup
 
 ## Usage
 
+Using it is very simple. Here are some examples. If you have questions, you can run `pm help` for more details.
+
 ```bash
 # List all items
 pm ls
