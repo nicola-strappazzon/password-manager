@@ -2,7 +2,6 @@ package otp
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
 	"github.com/nicola-strappazzon/password-manager/card"
@@ -50,7 +49,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Fprint(cmd.OutOrStdout(), out)
+		cmd.Print(out)
 
 		return nil
 	}
@@ -65,7 +64,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	))
 
 	if tmpCard.CheckOTP() {
-		fmt.Fprintf(cmd.OutOrStdout(), "The %s card does not have an OTP token.\n", p.Path())
+		cmd.Printf("The %s card does not have an OTP token.\n", p.Path())
 		return nil
 	}
 
@@ -76,11 +75,11 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Fprintf(cmd.OutOrStdout(), "Copied OTP code for %s to clipboard.\n", p.Path())
+		cmd.Printf("Copied OTP code for %s to clipboard.\n", p.Path())
 		return nil
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), otpValue)
+	cmd.Println(otpValue)
 
 	return nil
 }

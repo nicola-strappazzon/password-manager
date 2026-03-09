@@ -2,7 +2,6 @@ package ls
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
 	"github.com/nicola-strappazzon/password-manager/completion"
@@ -33,7 +32,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Fprint(cmd.OutOrStdout(), out)
+		cmd.Print(out)
 	} else {
 		return errors.New("No such file or directory.")
 	}

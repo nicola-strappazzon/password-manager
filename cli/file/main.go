@@ -86,14 +86,14 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		tmpCard.Files.Add((&card.File{}).Load(flagInclude))
 		tmpCard.Save()
 
-		fmt.Fprintf(cmd.OutOrStdout(), "Added file %s to the GPG-encrypted container %s.\n", fileName, p.Path())
+		cmd.Printf("Added file %s to the GPG-encrypted container %s.\n", fileName, p.Path())
 		return nil
 	}
 
 	if flagExtract != "" {
 		if tmpCard.Files.Exist(card.File{Name: fileName}) {
 			tmpCard.Files.Get(card.File{Name: fileName}).Save(flagOutput)
-			fmt.Fprintf(cmd.OutOrStdout(), "Saved file %s to %s.\n", fileName, flagOutput)
+			cmd.Printf("Saved file %s to %s.\n", fileName, flagOutput)
 		} else {
 			return fmt.Errorf("File %s does not exist; operation aborted.", fileName)
 		}
@@ -103,17 +103,17 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		if tmpCard.Files.Exist(card.File{Name: fileName}) {
 			tmpCard.Files.Delete(card.File{Name: fileName})
 			tmpCard.Save()
-			fmt.Fprintf(cmd.OutOrStdout(), "Deleted file %s from the GPG-encrypted container %s.\n", fileName, p.Path())
+			cmd.Printf("Deleted file %s from the GPG-encrypted container %s.\n", fileName, p.Path())
 		} else {
 			return fmt.Errorf("File %s does not exist; operation aborted.", fileName)
 		}
 	}
 
 	if flagList {
-		fmt.Fprintf(cmd.OutOrStdout(), "Files inside %s:\n", p.Path())
+		cmd.Printf("Files inside %s:\n", p.Path())
 
 		for _, file := range tmpCard.Files {
-			fmt.Fprintf(cmd.OutOrStdout(), " - %s (%s)\n", file.Name, humanize.Bytes(file.Size()))
+			cmd.Printf(" - %s (%s)\n", file.Name, humanize.Bytes(file.Size()))
 		}
 	}
 

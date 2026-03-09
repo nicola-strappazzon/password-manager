@@ -3,7 +3,6 @@ package edit
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
@@ -44,7 +43,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Fprint(cmd.OutOrStdout(), out)
+		cmd.Print(out)
 
 		return nil
 	}
