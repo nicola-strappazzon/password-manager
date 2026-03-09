@@ -31,3 +31,7 @@ func Exists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
 }
+
+func Remove(path string) error {
+	return os.Remove(path)
+}

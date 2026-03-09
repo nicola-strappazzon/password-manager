@@ -630,6 +630,27 @@ _pm_otp()
     noun_aliases=()
 }
 
+_pm_remove()
+{
+    last_command="pm_remove"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    has_completion_function=1
+    noun_aliases=()
+}
+
 _pm_setup()
 {
     last_command="pm_setup"
@@ -734,6 +755,7 @@ _pm_root_command()
     commands+=("help")
     commands+=("ls")
     commands+=("otp")
+    commands+=("remove")
     commands+=("setup")
     commands+=("show")
     commands+=("version")
