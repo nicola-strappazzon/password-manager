@@ -54,6 +54,10 @@ func PersistentPreRunE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("Run 'pm setup' to configure the application.")
 	}
 
+	if f := cmd.Flags().Lookup("passphrase"); f != nil && f.Changed {
+		cmd.PrintErrln("Warning: Using a passphrase on the command line interface can be insecure.")
+	}
+
 	return nil
 }
 
