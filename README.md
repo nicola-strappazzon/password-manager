@@ -1,4 +1,4 @@
-# pm - Password Manager
+# Password Manager (pm)
 
 [![Test](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nicola-strappazzon/password-manager)](https://goreportcard.com/report/github.com/nicola-strappazzon/password-manager)
@@ -31,27 +31,6 @@ Run the setup command to configure the application for first use:
 ```bash
 pm setup
 ```
-
-It will guide you through generating or importing an OpenPGP key pair and will print the environment variables you need to add to your shell profile:
-
-```bash
-export PM_PUBLICKEY="$HOME/.password-manager/public.asc"
-export PM_PRIVATEKEY="$HOME/.password-manager/private.asc"
-```
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `pm ls` | List all items in tree format |
-| `pm add <path>` | Add or update an encrypted item |
-| `pm show <path>` | Decrypt and show an item |
-| `pm edit <path>` | Edit an encrypted item |
-| `pm remove <path>` | Remove an encrypted item |
-| `pm otp <path>` | Generate an OTP code |
-| `pm generate` | Generate a random password |
-| `pm file <path>` | Manage files inside an encrypted item |
-| `pm setup` | Configure the application for first use |
 
 ## Usage
 
