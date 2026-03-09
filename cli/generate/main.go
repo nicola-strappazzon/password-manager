@@ -60,7 +60,7 @@ func RunCommand(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), v)
+	cmd.Println(v)
 }
 
 func GeneratePassword() string {

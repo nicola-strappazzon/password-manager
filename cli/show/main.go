@@ -83,7 +83,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Fprint(cmd.OutOrStdout(), out)
+		cmd.Print(out)
 
 		return nil
 	}
@@ -127,12 +127,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			field = "password"
 		}
 
-		fmt.Fprintf(
-			cmd.OutOrStdout(),
-			"Copied %s for %s to clipboard.\n",
-			field,
-			p.Path(),
-		)
+		cmd.Printf("Copied %s for %s to clipboard.\n", field, p.Path())
 
 		return nil
 	}
@@ -142,7 +137,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	fmt.Fprintln(cmd.OutOrStdout(), value)
+	cmd.Println(value)
 
 	return nil
 }
