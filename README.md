@@ -53,6 +53,9 @@ pm show personal/github -a
 # Copy the password to clipboard
 pm show personal/github -c
 
+# Generate QR Code to share
+pm show personal/github -q
+
 # Generate an OTP code
 pm otp personal/github
 
