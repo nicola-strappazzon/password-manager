@@ -5,7 +5,7 @@
 
 This is another Unix-style password manager written in Go to save your data with OpenPGP encryption.
 
-![Example](https://raw.githubusercontent.com/nicola-strappazzon/password-manager/master/assets/demo.gif){ .image100percent }
+![Example](https://raw.githubusercontent.com/nicola-strappazzon/password-manager/master/assets/demo.gif)
 
 > [!WARNING]
 > This project is under active development and may be unstable. Use at your own risk.
