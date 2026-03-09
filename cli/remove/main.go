@@ -1,0 +1,37 @@
+package remove
+
+import (
+	"errors"
+
+	"github.com/nicola-strappazzon/password-manager/arguments"
+	"github.com/nicola-strappazzon/password-manager/completion"
+	"github.com/nicola-strappazzon/password-manager/file"
+	"github.com/nicola-strappazzon/password-manager/path"
+	"github.com/nicola-strappazzon/password-manager/term"
+
+	"github.com/spf13/cobra"
+)
+
+func NewCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:               "remove",
+		Short:             "Remove an encrypted item.",
+		RunE:              RunCommand,
+		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
+	}
+}
+
+func RunCommand(cmd *cobra.Command, args []string) error {
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+
+	if !p.IsFile() {
+		return errors.New("No such file or directory.")
+	}
+
+	if !term.Confirm("Are you sure you would like to delete " + pathCard + "?") {
+		return nil
+	}
+
+	return file.Remove(p.Full())
+}
