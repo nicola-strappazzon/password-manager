@@ -26,7 +26,7 @@ The binary will be placed in your `GOBIN` directory, which defaults to `~/go/bin
 
 ## Setup
 
-Run the setup command to configure the application for first use:
+Before using it, you must configure the application. You need to create an OpenPGP key pair. If you already have your own keys, you can use them as well.
 
 ```bash
 pm setup
