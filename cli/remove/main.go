@@ -5,6 +5,7 @@ import (
 
 	"github.com/nicola-strappazzon/password-manager/arguments"
 	"github.com/nicola-strappazzon/password-manager/completion"
+	"github.com/nicola-strappazzon/password-manager/config"
 	"github.com/nicola-strappazzon/password-manager/file"
 	"github.com/nicola-strappazzon/password-manager/path"
 	"github.com/nicola-strappazzon/password-manager/term"
@@ -33,5 +34,11 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	return file.Remove(p.Full())
+	if err := file.Remove(p.Full()); err != nil {
+		return err
+	}
+
+	file.RemoveEmptyParents(p.Full(), config.GetPath(""))
+
+	return nil
 }
