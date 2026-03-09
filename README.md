@@ -24,6 +24,8 @@ go install github.com/nicola-strappazzon/password-manager@latest
 
 The binary will be placed in your `GOBIN` directory, which defaults to `~/go/bin`. Depending on how Go is installed, this directory may or may not be in your `PATH`.
 
+## Setup
+
 Run the setup command to configure the application for first use:
 
 ```bash
