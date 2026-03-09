@@ -20,3 +20,11 @@ gpg --show-keys gpg/pubkey.asc
 gpg --import gpg/pubkey.asc
 gpg --output vault/google.gpg --encrypt -r test@example.com seed/google.yaml
 gpg --batch --yes --delete-keys test@example.com
+
+
+export PM_PUBLICKEY="/Users/nicola/Documents/password-manager/testdata/gpg/pubkey.asc"
+export PM_PRIVATEKEY="/Users/nicola/Documents/password-manager/testdata/gpg/privkey.asc"
+
+IsWithYou
+
+pm add wifi/theforce -f password -v IsWithYou

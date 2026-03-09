@@ -5,8 +5,20 @@
 
 This is another Unix-style password manager written in Go to save your data with OpenPGP encryption.
 
+![Example](https://raw.githubusercontent.com/nicola-strappazzon/password-manager/master/assets/demo.gif){ .image100percent }
+
 > [!WARNING]
 > This project is under active development and may be unstable. Use at your own risk.
+
+## Features
+
+- OpenPGP encryption
+- CLI-first workflow
+- Compatible with existing GPG keys
+- Password generation
+- OTP support
+- Clipboard integration
+- QR code support
 
 ## Install
 
@@ -14,6 +26,7 @@ Using [Homebrew](https://brew.sh/):
 
 ```bash
 brew install nicola-strappazzon/tap/password-manager
+pm completion bash > /usr/local/etc/bash_completion.d/pm
 ```
 
 Using Go:

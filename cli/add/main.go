@@ -53,12 +53,16 @@ func PreRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("Invalid path. Use only letters, numbers, '-', '_', and '/'. The path must not end with '/'.")
 	}
 
+	if field == "" {
+		return fmt.Errorf("A field name is required.")
+	}
+
 	if NotInSlice(field) {
 		return fmt.Errorf("Invalid field: %s", field)
 	}
 
 	if field == "password" && value != "" {
-		return fmt.Errorf("Invalid value: do not provide the password directly. Leave it empty and the tool will prompt for it securely.")
+		cmd.PrintErrln("Warning: Using a password on the command line interface can be insecure.")
 	}
 
 	return nil
