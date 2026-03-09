@@ -35,3 +35,17 @@ func Exists(path string) bool {
 func Remove(path string) error {
 	return os.Remove(path)
 }
+
+func RemoveEmptyParents(filePath, stopAt string) {
+	dir := filepath.Dir(filePath)
+	for dir != stopAt {
+		entries, err := os.ReadDir(dir)
+		if err != nil || len(entries) > 0 {
+			break
+		}
+		if err := os.Remove(dir); err != nil {
+			break
+		}
+		dir = filepath.Dir(dir)
+	}
+}
