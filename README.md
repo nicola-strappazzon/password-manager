@@ -1,9 +1,9 @@
-# Password Manager (pm)
+# Password Manager
 
 [![Test](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nicola-strappazzon/password-manager)](https://goreportcard.com/report/github.com/nicola-strappazzon/password-manager)
 
-A Unix-style password manager written in Go that stores data encrypted with OpenPGP.
+This is another Unix-style password manager written in Go to save your data with OpenPGP encryption.
 
 > [!WARNING]
 > This project is under active development and may be unstable. Use at your own risk.
@@ -22,9 +22,7 @@ Using Go:
 go install github.com/nicola-strappazzon/password-manager@latest
 ```
 
-The binary will be placed in your `GOBIN` directory, which defaults to `~/go/bin`. Make sure it is in your `PATH`.
-
-## Setup
+The binary will be placed in your `GOBIN` directory, which defaults to `~/go/bin`. Depending on how Go is installed, this directory may or may not be in your `PATH`.
 
 Run the setup command to configure the application for first use:
 
