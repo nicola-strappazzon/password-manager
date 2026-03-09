@@ -12,13 +12,13 @@ This is another Unix-style password manager written in Go to save your data with
 
 ## Features
 
-- OpenPGP encryption
-- CLI-first workflow
-- Compatible with existing GPG keys
+- OpenPGP encryption with support for existing GPG keys
+- Simple Unix-style command line interface
+- Save sensitive data and files
 - Password generation
-- OTP support
+- OTP (TOTP) support
 - Clipboard integration
-- QR code support
+- QR code generation
 
 ## Install
 
