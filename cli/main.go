@@ -14,7 +14,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/cli/setup"
 	"github.com/nicola-strappazzon/password-manager/cli/show"
 	"github.com/nicola-strappazzon/password-manager/cli/version"
-	"github.com/nicola-strappazzon/password-manager/config"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
 
 	"github.com/spf13/cobra"
 )

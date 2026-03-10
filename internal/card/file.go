@@ -1,8 +1,8 @@
 package card
 
 import (
-	"github.com/nicola-strappazzon/password-manager/base64"
-	"github.com/nicola-strappazzon/password-manager/file"
+	"github.com/nicola-strappazzon/password-manager/internal/base64"
+	"github.com/nicola-strappazzon/password-manager/internal/file"
 )
 
 type File struct {

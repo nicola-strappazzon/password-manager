@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"unicode"
 
-	"github.com/nicola-strappazzon/password-manager/config"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
 )
 
 // personal/                                             <-- Directory, cli

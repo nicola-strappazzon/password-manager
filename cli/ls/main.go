@@ -3,10 +3,10 @@ package ls
 import (
 	"errors"
 
-	"github.com/nicola-strappazzon/password-manager/arguments"
-	"github.com/nicola-strappazzon/password-manager/completion"
-	"github.com/nicola-strappazzon/password-manager/explorer"
-	"github.com/nicola-strappazzon/password-manager/path"
+	"github.com/nicola-strappazzon/password-manager/internal/arguments"
+	"github.com/nicola-strappazzon/password-manager/internal/completion"
+	"github.com/nicola-strappazzon/password-manager/internal/explorer"
+	"github.com/nicola-strappazzon/password-manager/internal/path"
 
 	"github.com/spf13/cobra"
 )

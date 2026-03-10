@@ -3,8 +3,8 @@ package completion
 import (
 	"strings"
 
-	"github.com/nicola-strappazzon/password-manager/card"
-	"github.com/nicola-strappazzon/password-manager/explorer"
+	"github.com/nicola-strappazzon/password-manager/internal/card"
+	"github.com/nicola-strappazzon/password-manager/internal/explorer"
 
 	"github.com/spf13/cobra"
 )

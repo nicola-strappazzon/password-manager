@@ -8,9 +8,9 @@ import (
 
 	"github.com/ProtonMail/gopenpgp/v3/crypto"
 	"github.com/ProtonMail/gopenpgp/v3/profile"
-	"github.com/nicola-strappazzon/password-manager/config"
-	"github.com/nicola-strappazzon/password-manager/file"
-	"github.com/nicola-strappazzon/password-manager/term"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
+	"github.com/nicola-strappazzon/password-manager/internal/file"
+	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/spf13/cobra"
 )

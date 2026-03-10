@@ -3,7 +3,7 @@ package arguments_test
 import (
 	"testing"
 
-	"github.com/nicola-strappazzon/password-manager/arguments"
+	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 
 	"github.com/stretchr/testify/assert"
 )
