@@ -1,7 +1,7 @@
 package generate
 
 import (
-	"fmt"
+	"errors"
 	"math/rand"
 	"time"
 
@@ -32,7 +32,7 @@ func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "generate",
 		Short: "Generate a random password with configurable length, symbols, and numbers.",
-		Run:   RunCommand,
+		RunE:  RunCommand,
 	}
 
 	cmd.Flags().BoolVarP(&flagCopy, "copy", "c", false, "Copy generated password to clipboard")
@@ -45,22 +45,28 @@ func NewCommand() *cobra.Command {
 	return cmd
 }
 
-func RunCommand(cmd *cobra.Command, args []string) {
+func RunCommand(cmd *cobra.Command, args []string) error {
 	var v string
 
 	if flagLength < 4 || flagLength > 255 {
-		fmt.Println("Invalid length. Must be between 4 and 255 characters.")
-		return
+		return errors.New("Invalid length. Must be between 4 and 255 characters.")
 	}
 
 	v = GeneratePassword()
 
 	if flagCopy {
-		clipboard.Write(v)
-		return
+		if err := clipboard.Write(v); err != nil {
+			return err
+		}
+
+		cmd.Println("Generated password copied to clipboard.")
+
+		return nil
 	}
 
 	cmd.Println(v)
+
+	return nil
 }
 
 func GeneratePassword() string {
