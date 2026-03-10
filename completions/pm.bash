@@ -599,6 +599,33 @@ _pm_ls()
     noun_aliases=()
 }
 
+_pm_move()
+{
+    last_command="pm_move"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--passphrase=")
+    two_word_flags+=("--passphrase")
+    two_word_flags+=("-p")
+    local_nonpersistent_flags+=("--passphrase")
+    local_nonpersistent_flags+=("--passphrase=")
+    local_nonpersistent_flags+=("-p")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    has_completion_function=1
+    noun_aliases=()
+}
+
 _pm_otp()
 {
     last_command="pm_otp"
@@ -754,6 +781,7 @@ _pm_root_command()
     commands+=("generate")
     commands+=("help")
     commands+=("ls")
+    commands+=("move")
     commands+=("otp")
     commands+=("remove")
     commands+=("setup")

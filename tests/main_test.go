@@ -55,6 +55,7 @@ func TestIntegration(t *testing.T) {
 	t.Run("version", testVersion)
 	t.Run("add", testAdd)
 	t.Run("ls", testLs)
+	t.Run("move", testMove)
 	t.Run("generate", testGenerate)
 }
 
