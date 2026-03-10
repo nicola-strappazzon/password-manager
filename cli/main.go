@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Load() {
+func Load() *cobra.Command {
 	var rootCmd = &cobra.Command{
 		SilenceUsage:      true,
 		Use:               "pm",
@@ -42,7 +42,8 @@ func Load() {
 	rootCmd.AddCommand(setup.NewCommand())
 	rootCmd.AddCommand(show.NewCommand())
 	rootCmd.AddCommand(version.NewCommand())
-	rootCmd.Execute()
+
+	return rootCmd
 }
 
 func PersistentPreRunE(cmd *cobra.Command, args []string) error {
