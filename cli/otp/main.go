@@ -3,15 +3,15 @@ package otp
 import (
 	"errors"
 
-	"github.com/nicola-strappazzon/password-manager/arguments"
-	"github.com/nicola-strappazzon/password-manager/card"
-	"github.com/nicola-strappazzon/password-manager/clipboard"
-	"github.com/nicola-strappazzon/password-manager/completion"
-	"github.com/nicola-strappazzon/password-manager/explorer"
-	"github.com/nicola-strappazzon/password-manager/openpgp"
-	"github.com/nicola-strappazzon/password-manager/otp"
-	"github.com/nicola-strappazzon/password-manager/path"
-	"github.com/nicola-strappazzon/password-manager/term"
+	"github.com/nicola-strappazzon/password-manager/internal/arguments"
+	"github.com/nicola-strappazzon/password-manager/internal/card"
+	"github.com/nicola-strappazzon/password-manager/internal/clipboard"
+	"github.com/nicola-strappazzon/password-manager/internal/completion"
+	"github.com/nicola-strappazzon/password-manager/internal/explorer"
+	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
+	"github.com/nicola-strappazzon/password-manager/internal/otp"
+	"github.com/nicola-strappazzon/password-manager/internal/path"
+	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/spf13/cobra"
 )

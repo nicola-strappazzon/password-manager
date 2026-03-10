@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/nicola-strappazzon/password-manager/env"
+	"github.com/nicola-strappazzon/password-manager/internal/env"
 )
 
 var DataDir = ".password-manager"

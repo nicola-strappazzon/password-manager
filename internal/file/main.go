@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/nicola-strappazzon/password-manager/check"
+	"github.com/nicola-strappazzon/password-manager/internal/check"
 )
 
 func Name(in string) string {

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nicola-strappazzon/password-manager/config"
-	"github.com/nicola-strappazzon/password-manager/path"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
+	"github.com/nicola-strappazzon/password-manager/internal/path"
 
 	"github.com/stretchr/testify/assert"
 )

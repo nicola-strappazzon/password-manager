@@ -3,8 +3,8 @@ package card
 import (
 	"log"
 
-	"github.com/nicola-strappazzon/password-manager/file"
-	"github.com/nicola-strappazzon/password-manager/openpgp"
+	"github.com/nicola-strappazzon/password-manager/internal/file"
+	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
 
 	"github.com/goccy/go-yaml"
 )

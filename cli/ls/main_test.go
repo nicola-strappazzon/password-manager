@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/nicola-strappazzon/password-manager/cli/ls"
-	"github.com/nicola-strappazzon/password-manager/config"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
 
 	"github.com/stretchr/testify/assert"
 )
