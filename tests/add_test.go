@@ -35,4 +35,10 @@ func testAdd(t *testing.T) {
 		assert.Empty(t, stderr)
 		assert.NoError(t, err)
 	})
+
+	t.Run("field-already-exists", func(t *testing.T) {
+		stdout, _, err := run(add.NewCommand(), []string{"github", "-f", "username", "-v", "other-user", "-p", testPassphrase})
+		assert.Empty(t, stdout)
+		assert.EqualError(t, err, "Field 'username' already exists. Use 'pm update' to modify it.")
+	})
 }
