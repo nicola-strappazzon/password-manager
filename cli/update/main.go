@@ -1,0 +1,103 @@
+package update
+
+import (
+	"fmt"
+	"slices"
+
+	"github.com/nicola-strappazzon/password-manager/internal/arguments"
+	"github.com/nicola-strappazzon/password-manager/internal/card"
+	"github.com/nicola-strappazzon/password-manager/internal/completion"
+	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
+	"github.com/nicola-strappazzon/password-manager/internal/path"
+	"github.com/nicola-strappazzon/password-manager/internal/term"
+
+	"github.com/spf13/cobra"
+)
+
+var flagField string
+var flagPassphrase string
+var flagValue string
+
+func NewCommand() (cmd *cobra.Command) {
+	cmd = &cobra.Command{
+		Use:   "update",
+		Short: "Update a field in an encrypted item",
+		Example: "  pm update <TAB>\n" +
+			"  pm update aws -p <passphrase> -f password -v 12345\n",
+		SilenceUsage:      true,
+		PreRunE:           PreRun,
+		RunE:              RunCommand,
+		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
+	}
+
+	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Field name to update")
+	cmd.Flags().StringVarP(&flagValue, "value", "v", "", "Value to assign to the field")
+	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
+
+	cmd.RegisterFlagCompletionFunc("field", completion.SuggestFields)
+
+	return
+}
+
+func PreRun(cmd *cobra.Command, args []string) error {
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+
+	field, _ := cmd.Flags().GetString("field")
+	value, _ := cmd.Flags().GetString("value")
+
+	if pathCard == "" {
+		return fmt.Errorf("A path is required.")
+	}
+
+	if p.IsInvalid() {
+		return fmt.Errorf("Invalid path. Use only letters, numbers, '-', '_', and '/'. The path must not end with '/'.")
+	}
+
+	if !p.IsFile() {
+		return fmt.Errorf("No such file or directory.")
+	}
+
+	if field == "" {
+		return fmt.Errorf("A field name is required.")
+	}
+
+	if NotInSlice(field) {
+		return fmt.Errorf("Invalid field: %s", field)
+	}
+
+	if field == "password" && value != "" {
+		cmd.PrintErrln("Warning: Using a password on the command line interface can be insecure.")
+	}
+
+	return nil
+}
+
+func RunCommand(cmd *cobra.Command, args []string) error {
+	var pathCard = arguments.First(args)
+	var p path.Path = path.Path(pathCard)
+
+	tmpCard := card.New(openpgp.Decrypt(
+		term.ReadPassword("Passphrase: ", flagPassphrase),
+		p.Full(),
+	))
+
+	if tmpCard.GetValue(flagField) == "" {
+		return fmt.Errorf("Field '%s' does not have a value. Use 'pm add' to set it.", flagField)
+	}
+
+	if flagField == "password" {
+		tmpCard.Password = term.ReadPassword(fmt.Sprintf("Enter password for %s: ", p.Path()), flagField)
+	} else {
+		tmpCard.SetValue(flagField, flagValue)
+	}
+
+	tmpCard.Path = p.Full()
+	tmpCard.Save()
+
+	return nil
+}
+
+func NotInSlice(s string) bool {
+	return !slices.Contains((&card.Card{}).Fields(), s)
+}

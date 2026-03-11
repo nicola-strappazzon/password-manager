@@ -747,6 +747,49 @@ _pm_show()
     noun_aliases=()
 }
 
+_pm_update()
+{
+    last_command="pm_update"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--field=")
+    two_word_flags+=("--field")
+    flags_with_completion+=("--field")
+    flags_completion+=("__pm_handle_go_custom_completion")
+    two_word_flags+=("-f")
+    flags_with_completion+=("-f")
+    flags_completion+=("__pm_handle_go_custom_completion")
+    local_nonpersistent_flags+=("--field")
+    local_nonpersistent_flags+=("--field=")
+    local_nonpersistent_flags+=("-f")
+    flags+=("--passphrase=")
+    two_word_flags+=("--passphrase")
+    two_word_flags+=("-p")
+    local_nonpersistent_flags+=("--passphrase")
+    local_nonpersistent_flags+=("--passphrase=")
+    local_nonpersistent_flags+=("-p")
+    flags+=("--value=")
+    two_word_flags+=("--value")
+    two_word_flags+=("-v")
+    local_nonpersistent_flags+=("--value")
+    local_nonpersistent_flags+=("--value=")
+    local_nonpersistent_flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    has_completion_function=1
+    noun_aliases=()
+}
+
 _pm_version()
 {
     last_command="pm_version"
@@ -786,6 +829,7 @@ _pm_root_command()
     commands+=("remove")
     commands+=("setup")
     commands+=("show")
+    commands+=("update")
     commands+=("version")
 
     flags=()
