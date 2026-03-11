@@ -27,7 +27,7 @@ var flagPassphrase string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:   "file",
-		Short: "Manage files stored inside a GPG-encrypted container.",
+		Short: "Manage files stored in encrypted containers",
 		Example: "  pm file <TAB>\n" +
 			"  pm file passport -p <passphrase> -l\n" +
 			"  pm file passport -p <passphrase> -i /path/file/to/front.png\n" +

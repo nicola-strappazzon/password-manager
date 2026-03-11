@@ -20,7 +20,7 @@ var flagPassphrase string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:               "move [source] [destination]",
-		Short:             "Move an encrypted item.",
+		Short:             "Move an encrypted item",
 		SilenceUsage:      true,
 		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,

@@ -16,7 +16,7 @@ import (
 func NewCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:               "remove",
-		Short:             "Remove an encrypted item.",
+		Short:             "Remove an encrypted item",
 		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
