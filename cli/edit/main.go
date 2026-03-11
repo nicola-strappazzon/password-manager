@@ -65,8 +65,5 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	newCard := card.New(string(edited))
 	newCard.Save()
 
-	// fmt.Println("path:", path)
-	// fmt.Println("edited", edited)
-
 	return err
 }
