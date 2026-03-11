@@ -24,8 +24,9 @@ func NewCommand() (cmd *cobra.Command) {
 		Short: "Add or update an encrypted item",
 		Example: "  pm add <TAB>\n" +
 			"  pm add aws -p <passphrase> -f password -v 12345\n",
+		SilenceUsage:      true,
 		PreRunE:           PreRun,
-		Run:               RunCommand,
+		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
@@ -68,7 +69,7 @@ func PreRun(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func RunCommand(cmd *cobra.Command, args []string) {
+func RunCommand(cmd *cobra.Command, args []string) error {
 	var tmpCard = card.Card{}
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
@@ -78,6 +79,10 @@ func RunCommand(cmd *cobra.Command, args []string) {
 			term.ReadPassword("Passphrase: ", flagPassphrase),
 			p.Full(),
 		))
+
+		if tmpCard.GetValue(flagField) != "" {
+			return fmt.Errorf("Field '%s' already exists. Use 'pm update' to modify it.", flagField)
+		}
 	}
 
 	if flagField == "password" {
@@ -88,6 +93,8 @@ func RunCommand(cmd *cobra.Command, args []string) {
 
 	tmpCard.Path = p.Full()
 	tmpCard.Save()
+
+	return nil
 }
 
 func NotInSlice(s string) bool {
