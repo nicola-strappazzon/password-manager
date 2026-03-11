@@ -31,7 +31,7 @@ func init() {
 func NewCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "generate",
-		Short: "Generate a random password with configurable length, symbols, and numbers.",
+		Short: "Generate a random password",
 		RunE:  RunCommand,
 	}
 

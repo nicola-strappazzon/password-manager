@@ -21,7 +21,7 @@ var flagValue string
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:   "add",
-		Short: "Add or update an encrypted item.",
+		Short: "Add or update an encrypted item",
 		Example: "  pm add <TAB>\n" +
 			"  pm add aws -p <passphrase> -f password -v 12345\n",
 		PreRunE:           PreRun,

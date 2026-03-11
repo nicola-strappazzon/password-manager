@@ -14,7 +14,7 @@ import (
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
 		Use:               "ls",
-		Short:             "List all encrypted items in tree format.",
+		Short:             "List encrypted items in tree format",
 		RunE:              RunCommand,
 		ValidArgsFunction: completion.SuggestDirectories,
 	}

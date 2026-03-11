@@ -24,7 +24,7 @@ func Load() *cobra.Command {
 	var rootCmd = &cobra.Command{
 		SilenceUsage:      true,
 		Use:               "pm",
-		Long:              "This is another Unix-style password manager written in Go.",
+		Long:              "Yet another password manager. This one is written in Go.",
 		PersistentPreRunE: PersistentPreRunE,
 		RunE:              RunCommand,
 		CompletionOptions: cobra.CompletionOptions{
