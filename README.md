@@ -26,6 +26,7 @@ Using [Homebrew](https://brew.sh/):
 
 ```bash
 brew install nicola-strappazzon/tap/password-manager
+xattr -d com.apple.quarantine /opt/homebrew/bin/pm
 pm completion bash > /usr/local/etc/bash_completion.d/pm
 ```
 
