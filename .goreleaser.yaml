@@ -25,6 +25,20 @@ builds:
     ldflags:
       - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
 
+  - id: linux
+    binary: pm
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
+
 homebrew_casks:
   - name: password-manager
     binaries:
