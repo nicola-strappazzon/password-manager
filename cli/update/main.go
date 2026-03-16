@@ -87,7 +87,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	if flagField == "password" {
-		tmpCard.Password = term.ReadPassword(fmt.Sprintf("Enter password for %s: ", p.Path()), flagField)
+		tmpCard.Password = term.ReadPassword("Enter new password: ", flagValue)
 	} else {
 		tmpCard.SetValue(flagField, flagValue)
 	}
