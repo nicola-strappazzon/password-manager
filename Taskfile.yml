@@ -1,0 +1,45 @@
+version: "3"
+
+tasks:
+  default:
+    desc: Show help
+    cmds:
+      - task --list
+
+  deps:
+    desc: Download dependencies
+    cmds:
+      - go mod tidy
+      - go mod download
+
+  generate:
+    desc: Generate Go code
+    deps: [deps]
+    cmds:
+      - go generate ./...
+
+  build:
+    desc: Build binary
+    deps: [generate]
+    env:
+      CGO_ENABLED: "1"
+    sources:
+      - ./**/*.go
+    generates:
+      - pm
+    cmds:
+      - go build -ldflags "-s -w" -o pm .
+
+  completions:
+    desc: Generate bash completions
+    deps: [build]
+    cmds:
+      - mkdir -p completions
+      - ./pm completion bash > completions/pm.bash
+      - "echo Run: source completions/pm.bash"
+
+  tests:
+    desc: Run tests
+    deps: [generate]
+    cmds:
+      - go test -v ./...
