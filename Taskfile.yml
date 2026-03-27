@@ -12,15 +12,9 @@ tasks:
       - go mod tidy
       - go mod download
 
-  generate:
-    desc: Generate Go code
-    deps: [deps]
-    cmds:
-      - go generate ./...
-
   build:
     desc: Build binary
-    deps: [generate]
+    deps: [deps]
     env:
       CGO_ENABLED: "1"
     sources:
@@ -40,6 +34,6 @@ tasks:
 
   tests:
     desc: Run tests
-    deps: [generate]
+    deps: [build]
     cmds:
       - go test -v ./...
