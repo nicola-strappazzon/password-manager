@@ -13,7 +13,7 @@
 ## Features
 
 - Simple Unix-style command line interface
-- OpenPGP encryption
+- OpenPGP encryption (supports smartcards like YubiKey)
 - Save sensitive data and files
 - Password generation
 - 2FA/OTP/TOTP support

@@ -8,10 +8,9 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 	"github.com/nicola-strappazzon/password-manager/internal/card"
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
+	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/explorer"
-	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
-	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/confluentinc/go-editor"
 	"github.com/spf13/cobra"
@@ -52,10 +51,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return errors.New("No such file or directory.")
 	}
 
-	tmpCard = card.New(openpgp.Decrypt(
-		term.ReadPassword("Passphrase: ", flagPassphrase),
-		p.Full(),
-	))
+	tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
+	if err != nil {
+		return err
+	}
 
 	original := bytes.NewBufferString(tmpCard.ToString())
 	edit := editor.NewEditor()

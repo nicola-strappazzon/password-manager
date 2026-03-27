@@ -7,7 +7,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 	"github.com/nicola-strappazzon/password-manager/internal/card"
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
-	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
+	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 
@@ -75,10 +75,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	var p path.Path = path.Path(pathCard)
 
 	if p.IsFile() {
-		tmpCard = card.New(openpgp.Decrypt(
-			term.ReadPassword("Passphrase: ", flagPassphrase),
-			p.Full(),
-		))
+		tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
+		if err != nil {
+			return err
+		}
 
 		if tmpCard.GetValue(flagField) != "" {
 			return fmt.Errorf("Field '%s' already exists. Use 'pm update' to modify it.", flagField)
@@ -86,7 +86,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	if flagField == "password" {
-		tmpCard.Password = term.ReadPassword(fmt.Sprintf("Enter password for %s: ", p.Path()), flagField)
+		tmpCard.Password = term.ReadPassword("Enter new password: ", flagValue)
 	} else {
 		tmpCard.SetValue(flagField, flagValue)
 	}
