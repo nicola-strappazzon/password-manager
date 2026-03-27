@@ -6,71 +6,30 @@ import (
 	"io"
 	"os/exec"
 	"strings"
-
-	"github.com/nicola-strappazzon/password-manager/internal/check"
-	"github.com/nicola-strappazzon/password-manager/internal/config"
-	"github.com/nicola-strappazzon/password-manager/internal/file"
-
-	"github.com/ProtonMail/gopenpgp/v3/crypto"
 )
 
-func runCommand(name string, args ...string) ([]byte, error) {
+func runCommand(input []byte, name string, args ...string) ([]byte, error) {
+	var stderr bytes.Buffer
+
 	cmd := exec.Command(name, args...)
-	cmd.Stderr = io.Discard
+	cmd.Stdin = bytes.NewReader(input)
+	cmd.Stderr = &stderr
+
 	return cmd.Output()
 }
 
-func Decrypt(passphrase, path string) string {
-	var pgp = crypto.PGP()
-
-	privateKey, err := crypto.NewPrivateKeyFromArmored(
-		file.ReadInString(
-			config.GetPrivateKey(),
-		),
-		[]byte(passphrase),
-	)
-	check.Check(err)
-
-	decHandle, err := pgp.Decryption().DecryptionKey(privateKey).New()
-	defer decHandle.ClearPrivateParams()
-
-	check.Check(err)
-
-	decrypted, err := decHandle.Decrypt(
-		file.ReadInBytes(path),
-		crypto.Bytes,
-	)
-	check.Check(err)
-
-	return decrypted.String()
-}
-
-func Encrypt(in string) []byte {
-	var pgp = crypto.PGP()
-
-	publicKey, err := crypto.NewKeyFromArmored(
-		file.ReadInString(
-			config.GetPublicKey(),
-		),
-	)
-	check.Check(err)
-
-	encHandle, err := pgp.Encryption().Recipient(publicKey).New()
-	check.Check(err)
-
-	pgpMessage, err := encHandle.Encrypt([]byte(in))
-	check.Check(err)
-
-	return pgpMessage.Bytes()
-}
-
-func CardStatus() bool {
-	_, err := runCommand("gpg", "--card-status")
-	return err == nil
+func CardStatus() error {
+	_, err := runCommand(nil, "gpg", "--card-status")
+	return err
 }
 
 func CardIsReady() error {
+	if err := CardStatus(); err != nil {
+		return fmt.Errorf("no smartcard detected")
+	}
+
 	out, err := runCommand(
+		nil,
 		"gpg-connect-agent",
 		"SCD SERIALNO",
 		"/bye",
@@ -87,8 +46,22 @@ func CardIsReady() error {
 	return nil
 }
 
-func DecryptWithCard(passphrase, filePath string) (string, error) {
-	var out bytes.Buffer
+func Encrypt(in, recipient string) (out []byte, err error) {
+	out, err = runCommand(
+		[]byte(in),
+		"gpg",
+		"--batch",
+		"--yes",
+		"--quiet",
+		"--encrypt",
+		"--armor",
+		"--recipient", recipient,
+	)
+	return
+}
+
+func Decrypt(passphrase, filePath string) (out string, err error) {
+	var stdout bytes.Buffer
 
 	cmd := exec.Command(
 		"gpg",
@@ -102,10 +75,11 @@ func DecryptWithCard(passphrase, filePath string) (string, error) {
 	)
 
 	cmd.Stdin = strings.NewReader(passphrase + "\n")
-	cmd.Stdout = &out
+	cmd.Stdout = &stdout
 	cmd.Stderr = io.Discard
 
-	err := cmd.Run()
+	err = cmd.Run()
+	out = stdout.String()
 
-	return out.String(), err
+	return
 }

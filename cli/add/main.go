@@ -92,9 +92,8 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	tmpCard.Path = p.Full()
-	tmpCard.Save()
 
-	return nil
+	return tmpCard.Save()
 }
 
 func NotInSlice(s string) bool {
