@@ -3,7 +3,7 @@
 [![Test](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nicola-strappazzon/password-manager)](https://goreportcard.com/report/github.com/nicola-strappazzon/password-manager)
 
-`pm` is another Unix-style password manager written in Go to save your data with OpenPGP encryption.
+`pm` is a Unix-style password manager written in Go that securely stores your data using OpenPGP, with support for hardware-backed keys such as YubiKey.
 
 ![Example](https://raw.githubusercontent.com/nicola-strappazzon/password-manager/master/assets/demo.gif)
 
@@ -19,6 +19,12 @@
 - 2FA/OTP/TOTP support
 - Clipboard integration
 - QR code generation
+
+## Requirements
+
+- [GnuPG](https://www.gnupg.org) (gpg) installed and available in your `PATH`
+- An OpenPGP key pair (public + private key)
+- Optional: a hardware security key (e.g. YubiKey) for smartcard support
 
 ## Install
 

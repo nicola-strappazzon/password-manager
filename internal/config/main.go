@@ -20,18 +20,10 @@ func GetPath(in string) string {
 	return filepath.Join(base, in)
 }
 
-func GetPrivateKey() string {
-	return env.Get("PM_PRIVATEKEY", "")
+func GetRecipient() string {
+	return env.Get("PM_RECIPIENT", "")
 }
 
-func GetPublicKey() string {
-	return env.Get("PM_PUBLICKEY", "")
-}
-
-func HasNotPrivateKey() bool {
-	return GetPrivateKey() == ""
-}
-
-func HasNotPublicKey() bool {
-	return GetPublicKey() == ""
+func HasNotRecipient() bool {
+	return GetRecipient() == ""
 }

@@ -3,6 +3,7 @@ package card
 import (
 	"log"
 
+	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/nicola-strappazzon/password-manager/internal/file"
 	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
 
@@ -199,6 +200,9 @@ func (c Card) CheckOTP() bool {
 	return c.OTP == ""
 }
 
-func (c *Card) Save() {
-	file.Save(c.Path, openpgp.Encrypt(c.ToString()))
+func (c *Card) Save() error {
+	content, err := openpgp.Encrypt(c.ToString(), config.GetRecipient())
+	file.Save(c.Path, content)
+
+	return err
 }

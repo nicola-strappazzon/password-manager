@@ -7,25 +7,16 @@ import (
 )
 
 func Decrypt(passphrase, path string) (card.Card, error) {
-	var fileContent string
-
-	if openpgp.CardStatus() {
-		if err := openpgp.CardIsReady(); err == nil {
-			fileContent, err = openpgp.DecryptWithCard(
-				term.ReadPassword("Card PIN: ", passphrase),
-				path,
-			)
-
-			if err != nil {
-				return card.Card{}, err
-			}
-		}
+	if err := openpgp.CardIsReady(); err == nil {
+		passphrase = term.ReadPassword("Card PIN: ", passphrase)
 	} else {
-		fileContent = openpgp.Decrypt(
-			term.ReadPassword("Passphrase: ", passphrase),
-			path,
-		)
+		passphrase = term.ReadPassword("Passphrase: ", passphrase)
 	}
 
-	return card.New(fileContent), nil
+	fileContent, err := openpgp.Decrypt(
+		passphrase,
+		path,
+	)
+
+	return card.New(fileContent), err
 }

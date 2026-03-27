@@ -51,11 +51,7 @@ func Load() *cobra.Command {
 }
 
 func PersistentPreRunE(cmd *cobra.Command, args []string) error {
-	if config.HasNotPublicKey() {
-		return fmt.Errorf("Run 'pm setup' to configure the application.")
-	}
-
-	if config.HasNotPrivateKey() {
+	if config.HasNotRecipient() {
 		return fmt.Errorf("Run 'pm setup' to configure the application.")
 	}
 
