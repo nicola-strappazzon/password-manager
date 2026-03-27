@@ -7,7 +7,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 	"github.com/nicola-strappazzon/password-manager/internal/card"
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
-	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
+	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 
@@ -77,10 +77,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 
-	tmpCard := card.New(openpgp.Decrypt(
-		term.ReadPassword("Passphrase: ", flagPassphrase),
-		p.Full(),
-	))
+	tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
+	if err != nil {
+		return err
+	}
 
 	if tmpCard.GetValue(flagField) == "" {
 		return fmt.Errorf("Field '%s' does not have a value. Use 'pm add' to set it.", flagField)

@@ -4,13 +4,11 @@ import (
 	"errors"
 
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
-	"github.com/nicola-strappazzon/password-manager/internal/card"
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
 	"github.com/nicola-strappazzon/password-manager/internal/config"
+	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/file"
-	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
-	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/spf13/cobra"
 )
@@ -55,10 +53,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return errors.New("Destination already exists.")
 	}
 
-	tmpCard := card.New(openpgp.Decrypt(
-		term.ReadPassword("Passphrase: ", flagPassphrase),
-		src.Full(),
-	))
+	tmpCard, err := decryptor.Decrypt(flagPassphrase, src.Full())
+	if err != nil {
+		return err
+	}
 
 	tmpCard.Path = dst.Full()
 	tmpCard.Save()
