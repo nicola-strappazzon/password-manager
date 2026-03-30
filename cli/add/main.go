@@ -75,7 +75,8 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	var p path.Path = path.Path(pathCard)
 
 	if p.IsFile() {
-		tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
+		var err error
+		tmpCard, err = decryptor.Decrypt(flagPassphrase, p.Full())
 		if err != nil {
 			return err
 		}
