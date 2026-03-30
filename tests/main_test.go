@@ -8,21 +8,20 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ProtonMail/gopenpgp/v3/crypto"
-	"github.com/ProtonMail/gopenpgp/v3/profile"
 	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/spf13/cobra"
 )
 
 const testPassphrase = "test-passphrase"
+const testRecipient = "test@example.com"
 
 func TestMain(m *testing.M) {
 	if _, err := exec.LookPath("gpg"); err != nil {
-		fmt.Fprintln(os.Stderr, "gpg not found in PATH, skipping integration tests")
-		os.Exit(0)
+		os.Setenv("PATH", "/opt/homebrew/bin:/usr/local/bin:"+os.Getenv("PATH"))
 	}
 
-	keysDir, err := os.MkdirTemp("", "pm-keys-*")
+	gnupghomeDir, err := os.MkdirTemp("", "pm-gnupghome-*")
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "setup error:", err)
 		os.Exit(1)
@@ -31,27 +30,29 @@ func TestMain(m *testing.M) {
 	vaultDir, err := os.MkdirTemp("", "pm-vault-*")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "setup error:", err)
+		os.RemoveAll(gnupghomeDir)
 		os.Exit(1)
 	}
 
-	if err := generateKeys(keysDir); err != nil {
+	os.Setenv("GNUPGHOME", gnupghomeDir)
+
+	if err := setupGPG(gnupghomeDir); err != nil {
 		fmt.Fprintln(os.Stderr, "key generation error:", err)
-		os.RemoveAll(keysDir)
+		os.RemoveAll(gnupghomeDir)
 		os.RemoveAll(vaultDir)
 		os.Exit(1)
 	}
 
+	os.Setenv("PM_RECIPIENT", testRecipient)
+
 	config.DataDir = ""
 	config.UserHomeDir = func() (string, error) { return vaultDir, nil }
 
-	os.Setenv("PM_PUBLICKEY", filepath.Join(keysDir, "public.asc"))
-	os.Setenv("PM_PRIVATEKEY", filepath.Join(keysDir, "private.asc"))
-
 	code := m.Run()
 
-	os.Unsetenv("PM_PUBLICKEY")
-	os.Unsetenv("PM_PRIVATEKEY")
-	os.RemoveAll(keysDir)
+	os.Unsetenv("GNUPGHOME")
+	os.Unsetenv("PM_RECIPIENT")
+	os.RemoveAll(gnupghomeDir)
 	os.RemoveAll(vaultDir)
 
 	os.Exit(code)
@@ -75,37 +76,26 @@ func run(cmd *cobra.Command, args []string) (string, string, error) {
 	return stdout.String(), stderr.String(), err
 }
 
-func generateKeys(dir string) error {
-	pgp := crypto.PGPWithProfile(profile.Default())
-	key, err := pgp.KeyGeneration().AddUserId("Test", "test@example.com").New().GenerateKey()
-	if err != nil {
-		return err
-	}
-	defer key.ClearPrivateParams()
+func setupGPG(dir string) error {
+	params := "Key-Type: RSA\n" +
+		"Key-Length: 2048\n" +
+		"Subkey-Type: RSA\n" +
+		"Subkey-Length: 2048\n" +
+		"Name-Real: Test\n" +
+		"Name-Email: " + testRecipient + "\n" +
+		"Expire-Date: 0\n" +
+		"Passphrase: " + testPassphrase + "\n" +
+		"%commit\n"
 
-	lockedKey, err := crypto.PGP().LockKey(key, []byte(testPassphrase))
-	if err != nil {
-		return err
-	}
-
-	pubKey, err := key.ToPublic()
-	if err != nil {
-		return err
-	}
-
-	pubArmored, err := pubKey.Armor()
-	if err != nil {
+	paramsFile := filepath.Join(dir, "keygen.params")
+	if err := os.WriteFile(paramsFile, []byte(params), 0600); err != nil {
 		return err
 	}
 
-	privArmored, err := lockedKey.Armor()
-	if err != nil {
-		return err
+	cmd := exec.Command("gpg", "--batch", "--gen-key", paramsFile)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("gpg keygen failed: %s: %w", out, err)
 	}
 
-	if err := os.WriteFile(filepath.Join(dir, "public.asc"), []byte(pubArmored), 0600); err != nil {
-		return err
-	}
-
-	return os.WriteFile(filepath.Join(dir, "private.asc"), []byte(privArmored), 0600)
+	return nil
 }
