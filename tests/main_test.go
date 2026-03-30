@@ -21,6 +21,7 @@ func TestMain(m *testing.M) {
 	}
 
 	gnupghomeDir, err := os.MkdirTemp("", "pm-gnupghome-*")
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "setup error:", err)
 		os.Exit(1)

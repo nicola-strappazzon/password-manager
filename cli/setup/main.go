@@ -1,6 +1,9 @@
 package setup
 
 import (
+	"fmt"
+	"os/exec"
+
 	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 
@@ -17,6 +20,10 @@ func NewCommand() *cobra.Command {
 }
 
 func RunCommand(cmd *cobra.Command, args []string) error {
+	if _, err := exec.LookPath("gpg"); err != nil {
+		return fmt.Errorf("gpg is not installed or not found in PATH. Please install GnuPG before using this application.")
+	}
+
 	if !config.HasNotRecipient() {
 		cmd.Println("The application is already configured.")
 		if !term.Confirm("Do you want to continue anyway?") {
