@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
@@ -16,6 +17,11 @@ import (
 const testPassphrase = "test-passphrase"
 
 func TestMain(m *testing.M) {
+	if _, err := exec.LookPath("gpg"); err != nil {
+		fmt.Fprintln(os.Stderr, "gpg not found in PATH, skipping integration tests")
+		os.Exit(0)
+	}
+
 	keysDir, err := os.MkdirTemp("", "pm-keys-*")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "setup error:", err)
