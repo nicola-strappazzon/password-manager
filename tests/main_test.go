@@ -17,7 +17,8 @@ const testRecipient = "test@example.com"
 
 func TestMain(m *testing.M) {
 	if _, err := exec.LookPath("gpg"); err != nil {
-		os.Setenv("PATH", "/opt/homebrew/bin:/usr/local/bin:"+os.Getenv("PATH"))
+		fmt.Fprintln(os.Stderr, "gpg not found in PATH, skipping integration tests")
+		os.Exit(0)
 	}
 
 	gnupghomeDir, err := os.MkdirTemp("", "pm-gnupghome-*")
