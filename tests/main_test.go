@@ -43,15 +43,18 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	os.Setenv("PM_RECIPIENT", testRecipient)
-
 	config.DataDir = ""
 	config.UserHomeDir = func() (string, error) { return vaultDir, nil }
+	if err := os.WriteFile(filepath.Join(vaultDir, config.GPGIDFile), []byte(testRecipient+"\n"), 0600); err != nil {
+		fmt.Fprintln(os.Stderr, "setup error:", err)
+		os.RemoveAll(gnupghomeDir)
+		os.RemoveAll(vaultDir)
+		os.Exit(1)
+	}
 
 	code := m.Run()
 
 	os.Unsetenv("GNUPGHOME")
-	os.Unsetenv("PM_RECIPIENT")
 	os.RemoveAll(gnupghomeDir)
 	os.RemoveAll(vaultDir)
 

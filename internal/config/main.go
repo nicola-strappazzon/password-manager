@@ -1,14 +1,15 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/nicola-strappazzon/password-manager/internal/env"
+	"strings"
 )
 
 var DataDir = ".password-manager"
 var UserHomeDir = os.UserHomeDir
+var GPGIDFile = ".gpg-id"
 
 func GetPath(in string) string {
 	home, err := UserHomeDir()
@@ -21,7 +22,27 @@ func GetPath(in string) string {
 }
 
 func GetRecipient() string {
-	return env.Get("PM_RECIPIENT", "")
+	data, err := os.ReadFile(GetPath(GPGIDFile))
+	if err != nil {
+		return ""
+	}
+
+	return strings.TrimSpace(string(data))
+}
+
+func SaveRecipient(in string) error {
+	path := GetPath(GPGIDFile)
+
+	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
+		return err
+	}
+
+	content := strings.TrimSpace(in)
+	if content == "" {
+		return fmt.Errorf("recipient cannot be empty")
+	}
+
+	return os.WriteFile(path, []byte(content+"\n"), 0600)
 }
 
 func HasNotRecipient() bool {
