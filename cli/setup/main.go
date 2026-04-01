@@ -34,11 +34,24 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 	if term.Confirm("Do you already have an OpenPGP key pair?") {
 		email := term.ReadLine("What is your e-mail?:")
+		if err := ValidateRecipient(email); err != nil {
+			return err
+		}
+
 		if err := config.SaveRecipient(email); err != nil {
 			return err
 		}
 
 		cmd.Printf("Recipient saved in %s\n", config.GetPath(config.GPGIDFile))
+	}
+
+	return nil
+}
+
+func ValidateRecipient(recipient string) error {
+	cmd := exec.Command("gpg", "--list-keys", "--with-colons", fmt.Sprintf("<%s>", recipient))
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("the recipient %q was not found in your local GPG keyring", recipient)
 	}
 
 	return nil
