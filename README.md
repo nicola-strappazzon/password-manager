@@ -73,6 +73,8 @@ Before using it, you must configure the application. You need to create an OpenP
 pm setup
 ```
 
+This command stores your OpenPGP recipient in `~/.password-manager/.gpg-id`.
+
 ## Usage
 
 Using it is very simple. Here are some examples. If you have questions, you can run `pm help` for more details.

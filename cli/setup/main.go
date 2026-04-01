@@ -34,10 +34,11 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 	if term.Confirm("Do you already have an OpenPGP key pair?") {
 		email := term.ReadLine("What is your e-mail?:")
+		if err := config.SaveRecipient(email); err != nil {
+			return err
+		}
 
-		cmd.Printf("\nAdd the following lines to your shell profile (~/.zshrc or ~/.bashrc):\n\n")
-		cmd.Printf("  export PM_RECIPIENT=\"%s\"\n", email)
-		cmd.Println("\nThen reload your shell: source ~/.zshrc")
+		cmd.Printf("Recipient saved in %s\n", config.GetPath(config.GPGIDFile))
 	}
 
 	return nil
