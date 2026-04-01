@@ -51,6 +51,10 @@ func Load() *cobra.Command {
 }
 
 func PersistentPreRunE(cmd *cobra.Command, args []string) error {
+	if cmd.Name() == "version" {
+		return nil
+	}
+
 	if config.HasNotRecipient() {
 		return fmt.Errorf("Run 'pm setup' to configure the application.")
 	}
