@@ -85,6 +85,11 @@ func PrintTree(root string) (out string, err error) {
 			return err
 		}
 
+		if d.IsDir() && path == root {
+			out += fmt.Sprintf("\033[1;37m%s\033[0m\n", "Password Store")
+			return nil
+		}
+
 		if d.IsDir() && strings.HasPrefix(d.Name(), ".") && path != root {
 			return filepath.SkipDir
 		}
@@ -94,11 +99,6 @@ func PrintTree(root string) (out string, err error) {
 		}
 
 		if d.Name() == "Makefile" {
-			return nil
-		}
-
-		if path == root {
-			out += fmt.Sprintf("\033[1;37m%s\033[0m\n", "Password Store")
 			return nil
 		}
 
