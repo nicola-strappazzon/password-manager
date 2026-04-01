@@ -11,29 +11,30 @@ import (
 )
 
 type Card struct {
-	Certificate   string `yaml:"certificate"`
-	Database      string `yaml:"database"`
-	Email         string `yaml:"email"`
-	Files         Files  `yaml:"files"`
-	Host          string `yaml:"host"`
-	IP            string `yaml:"ip"`
-	MAC           string `yaml:"mac"`
-	Name          string `yaml:"name"`
-	Notes         string `yaml:"notes"`
-	OTP           string `yaml:"otp"`
-	Password      string `yaml:"password"`
-	Path          string
-	Port          string `yaml:"port"`
-	RecoveryCodes string `yaml:"recovery_codes"`
-	RecoveryKey   string `yaml:"recovery_key"`
-	SSID          string `yaml:"ssid"`
-	Schema        string `yaml:"schema"`
-	SecretKey     string `yaml:"secret_key"`
-	Serial        string `yaml:"serial"`
-	Token         string `yaml:"token"`
-	URL           string `yaml:"url"`
-	Username      string `yaml:"username"`
-	AWS           struct {
+	Certificate    string `yaml:"certificate"`
+	Database       string `yaml:"database"`
+	Email          string `yaml:"email"`
+	Files          Files  `yaml:"files"`
+	Host           string `yaml:"host"`
+	IP             string `yaml:"ip"`
+	MAC            string `yaml:"mac"`
+	MasterPassword string `yaml:"master_password"`
+	Name           string `yaml:"name"`
+	Notes          string `yaml:"notes"`
+	OTP            string `yaml:"otp"`
+	Password       string `yaml:"password"`
+	Path           string
+	Port           string `yaml:"port"`
+	RecoveryCodes  string `yaml:"recovery_codes"`
+	RecoveryKey    string `yaml:"recovery_key"`
+	SSID           string `yaml:"ssid"`
+	Schema         string `yaml:"schema"`
+	SecretKey      string `yaml:"secret_key"`
+	Serial         string `yaml:"serial"`
+	Token          string `yaml:"token"`
+	URL            string `yaml:"url"`
+	Username       string `yaml:"username"`
+	AWS            struct {
 		Region          string `yaml:"region"`
 		AccountId       string `yaml:"account_id"`
 		AccessKey       string `yaml:"access_key"`
@@ -71,6 +72,7 @@ func (c Card) Fields() []string {
 		"host",
 		"ip",
 		"mac",
+		"master_password",
 		"name",
 		"notes",
 		"otp",
@@ -101,6 +103,8 @@ func (c Card) GetValue(in string) (out string) {
 	case "ip":
 		out = c.IP
 	case "mac":
+		out = c.MAC
+	case "master_password":
 		out = c.MAC
 	case "name":
 		out = c.Name
@@ -156,6 +160,8 @@ func (c *Card) SetValue(key, value string) {
 	case "ip":
 		c.IP = value
 	case "mac":
+		c.MAC = value
+	case "master_password":
 		c.MAC = value
 	case "name":
 		c.Name = value
