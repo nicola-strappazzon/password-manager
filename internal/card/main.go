@@ -105,7 +105,7 @@ func (c Card) GetValue(in string) (out string) {
 	case "mac":
 		out = c.MAC
 	case "master_password":
-		out = c.MAC
+		out = c.MasterPassword
 	case "name":
 		out = c.Name
 	case "notes":
@@ -162,7 +162,7 @@ func (c *Card) SetValue(key, value string) {
 	case "mac":
 		c.MAC = value
 	case "master_password":
-		c.MAC = value
+		c.MasterPassword = value
 	case "name":
 		c.Name = value
 	case "notes":
