@@ -64,6 +64,7 @@ func TestMain(m *testing.M) {
 func TestIntegration(t *testing.T) {
 	t.Run("version", testVersion)
 	t.Run("add", testAdd)
+	t.Run("file", testFile)
 	t.Run("ls", testLs)
 	t.Run("move", testMove)
 	t.Run("update", testUpdate)
