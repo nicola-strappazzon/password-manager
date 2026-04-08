@@ -8,6 +8,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/cli/edit"
 	"github.com/nicola-strappazzon/password-manager/cli/file"
 	"github.com/nicola-strappazzon/password-manager/cli/generate"
+	"github.com/nicola-strappazzon/password-manager/cli/git"
 	"github.com/nicola-strappazzon/password-manager/cli/ls"
 	"github.com/nicola-strappazzon/password-manager/cli/move"
 	"github.com/nicola-strappazzon/password-manager/cli/otp"
@@ -38,6 +39,7 @@ func Load() *cobra.Command {
 	rootCmd.AddCommand(edit.NewCommand())
 	rootCmd.AddCommand(file.NewCommand())
 	rootCmd.AddCommand(generate.NewCommand())
+	rootCmd.AddCommand(git.NewCommand())
 	rootCmd.AddCommand(ls.NewCommand())
 	rootCmd.AddCommand(move.NewCommand())
 	rootCmd.AddCommand(otp.NewCommand())
