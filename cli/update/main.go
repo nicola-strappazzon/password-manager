@@ -8,6 +8,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/card"
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
 	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
+	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 
@@ -95,7 +96,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	tmpCard.Path = p.Full()
 	tmpCard.Save()
 
-	return nil
+	return git.Commit(fmt.Sprintf("Edit %s for %s", flagField, pathCard))
 }
 
 func NotInSlice(s string) bool {

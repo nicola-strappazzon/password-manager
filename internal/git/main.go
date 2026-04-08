@@ -76,6 +76,20 @@ func UnpushedCommits() []string {
 	return commits
 }
 
+func Commit(message string) error {
+	if !IsRepo() {
+		return nil
+	}
+
+	path := storePath()
+
+	if err := exec.Command("git", "-C", path, "add", "-A").Run(); err != nil {
+		return err
+	}
+
+	return exec.Command("git", "-C", path, "commit", "-m", message).Run()
+}
+
 func UncommittedChangesWarning() string {
 	if !IsRepo() {
 		return ""
