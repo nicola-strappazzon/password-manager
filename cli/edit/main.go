@@ -10,6 +10,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
 	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/explorer"
+	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 
 	"github.com/confluentinc/go-editor"
@@ -64,5 +65,9 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	newCard := card.New(string(edited))
 	newCard.Save()
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	return git.Commit("Edit " + pathCard)
 }

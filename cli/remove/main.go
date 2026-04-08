@@ -7,6 +7,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
 	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/nicola-strappazzon/password-manager/internal/file"
+	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 
@@ -40,5 +41,5 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 	file.RemoveEmptyParents(p.Full(), config.GetPath(""))
 
-	return nil
+	return git.Commit("Delete " + pathCard)
 }
