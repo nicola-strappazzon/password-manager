@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/nicola-strappazzon/password-manager/cli/git/pull"
 	"github.com/nicola-strappazzon/password-manager/cli/git/status"
 	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/spf13/cobra"
@@ -12,6 +13,7 @@ func NewCommand() *cobra.Command {
 		Short: "Manage the git repository of the password store",
 	}
 
+	cmd.AddCommand(pull.NewCommand())
 	cmd.AddCommand(status.NewCommand())
 
 	return cmd
