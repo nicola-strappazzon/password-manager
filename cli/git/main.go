@@ -2,6 +2,7 @@ package git
 
 import (
 	"github.com/nicola-strappazzon/password-manager/cli/git/pull"
+	"github.com/nicola-strappazzon/password-manager/cli/git/push"
 	"github.com/nicola-strappazzon/password-manager/cli/git/status"
 	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/spf13/cobra"
@@ -14,6 +15,7 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.AddCommand(pull.NewCommand())
+	cmd.AddCommand(push.NewCommand())
 	cmd.AddCommand(status.NewCommand())
 
 	return cmd
