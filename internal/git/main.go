@@ -76,6 +76,11 @@ func UnpushedCommits() []string {
 	return commits
 }
 
+func Push() (string, error) {
+	out, err := exec.Command("git", "-C", storePath(), "push").CombinedOutput()
+	return string(out), err
+}
+
 func Pull() (string, error) {
 	out, err := exec.Command("git", "-C", storePath(), "pull").CombinedOutput()
 	return string(out), err
