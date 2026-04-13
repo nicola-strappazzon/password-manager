@@ -24,6 +24,7 @@ type Card struct {
 	OTP            string `yaml:"otp"`
 	Password       string `yaml:"password"`
 	Path           string
+	Pin            string `yaml:"pin"`
 	Port           string `yaml:"port"`
 	RecoveryCodes  string `yaml:"recovery_codes"`
 	RecoveryKey    string `yaml:"recovery_key"`
@@ -77,6 +78,7 @@ func (c Card) Fields() []string {
 		"notes",
 		"otp",
 		"password",
+		"pin",
 		"port",
 		"recovery_codes",
 		"recovery_key",
@@ -114,6 +116,8 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.OTP
 	case "password":
 		out = c.Password
+	case "pin":
+		out = c.Pin
 	case "port":
 		out = c.Port
 	case "recovery_codes":
@@ -171,6 +175,8 @@ func (c *Card) SetValue(key, value string) {
 		c.OTP = value
 	case "password":
 		c.Password = value
+	case "pin":
+		c.Pin = value
 	case "port":
 		c.Port = value
 	case "recovery_codes":
