@@ -52,6 +52,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return errors.New("No such file or directory.")
 	}
 
+	if p.Size() == 0 {
+		return errors.New("File is empty.")
+	}
+
 	tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
 	if err != nil {
 		return err

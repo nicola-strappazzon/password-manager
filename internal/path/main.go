@@ -57,6 +57,14 @@ func (p Path) IsFile() bool {
 	return info.Mode().IsRegular()
 }
 
+func (p Path) Size() int64 {
+	info, err := os.Stat(p.Full())
+	if err != nil {
+		return 0
+	}
+	return info.Size()
+}
+
 func (p Path) IsInvalid() bool {
 	for _, r := range p.Path() {
 		if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '/' || r == '-' || r == '_' {
