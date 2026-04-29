@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
@@ -16,6 +17,41 @@ func runCommand(input []byte, name string, args ...string) ([]byte, error) {
 	cmd.Stderr = &stderr
 
 	return cmd.Output()
+}
+
+func GetRecipientKeyID(filePath string) (string, error) {
+	var keyIDRegex = regexp.MustCompile(`(?m)^:pubkey enc packet:.*keyid\s+([0-9A-F]+)`)
+
+	out, err := runCommand(nil, "gpg", "--list-only", "--list-packets", "--batch", "--no-tty", filePath)
+	if err != nil {
+		return "", err
+	}
+
+	match := keyIDRegex.FindSubmatch(out)
+	if match == nil {
+		return "", fmt.Errorf("keyid not found in: %s", filePath)
+	}
+
+	return string(match[1]), nil
+}
+
+func RequiresSmartCard(keyID string) (bool, error) {
+	out, err := runCommand(nil, "gpg", "--with-colons", "--list-secret-keys", keyID)
+	if err != nil {
+		return false, err
+	}
+
+	for _, line := range strings.Split(string(out), "\n") {
+		fields := strings.Split(line, ":")
+		if len(fields) < 15 || !strings.HasPrefix(fields[0], "ssb") {
+			continue
+		}
+		if fields[11] == "e" && fields[14] != "+" {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func CardStatus() error {
