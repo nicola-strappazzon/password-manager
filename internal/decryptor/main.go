@@ -25,10 +25,17 @@ func Decrypt(passphrase, path string) (card.Card, error) {
 		return card.Card{}, fmt.Errorf("This file requires a smartcard to decrypt.")
 	}
 
-	if cardReady && useCard {
+	if useCard {
 		passphrase = term.ReadPassword("Card PIN: ", passphrase)
-	} else if !cardReady {
+	} else {
 		passphrase = term.ReadPassword("Passphrase: ", passphrase)
+	}
+
+	if passphrase == "" {
+		if useCard {
+			return card.Card{}, fmt.Errorf("Card PIN cannot be empty.")
+		}
+		return card.Card{}, fmt.Errorf("Passphrase cannot be empty.")
 	}
 
 	fileContent, err := openpgp.Decrypt(
