@@ -19,24 +19,15 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	if branch := git.Branch(); branch != "" {
-		cmd.Printf("Branch: %s\n", branch)
-	}
-
 	entries := git.StatusEntries()
-	if len(entries) > 0 {
-		cmd.Println("\nUncommitted changes:")
-		for _, e := range entries {
-			cmd.Printf("  %-12s %s\n", e.Label()+":", e.File)
-		}
+	commits := git.UnpushedCommits()
+
+	for _, e := range entries {
+		cmd.Printf("%s:%-12s %s\n", git.Branch(), e.Label()+":", e.File)
 	}
 
-	commits := git.UnpushedCommits()
-	if len(commits) > 0 {
-		cmd.Println("\nUnpushed commits:")
-		for _, c := range commits {
-			cmd.Printf("  %s\n", c)
-		}
+	for _, c := range commits {
+		cmd.Printf("%s:%s\n", git.Branch(), c)
 	}
 
 	if len(entries) == 0 && len(commits) == 0 {
