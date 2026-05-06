@@ -9,6 +9,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/completion"
 	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
 	"github.com/nicola-strappazzon/password-manager/internal/file"
+	"github.com/nicola-strappazzon/password-manager/internal/git"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 
 	"github.com/spf13/cobra"
@@ -70,7 +71,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		tmpCard.Save()
 
 		cmd.Printf("Added file %s to the GPG-encrypted container %s.\n", fileName, p.Path())
-		return nil
+		return git.Commit(fmt.Sprintf("Add file %s into %s", fileName, pathCard))
 	}
 
 	if flagExtract != "" {
@@ -90,7 +91,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 			tmpCard.Files.Delete(card.File{Name: fileName})
 			tmpCard.Save()
 			cmd.Printf("Deleted file %s from the GPG-encrypted container %s.\n", fileName, p.Path())
-			return nil
+			return git.Commit(fmt.Sprintf("Delete file %s from %s", fileName, pathCard))
 		} else {
 			return fmt.Errorf("File %s does not exist; operation aborted.", fileName)
 		}
