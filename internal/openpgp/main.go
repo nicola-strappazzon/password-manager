@@ -82,6 +82,39 @@ func CardIsReady() error {
 	return nil
 }
 
+func KeyBelongsToRecipient(keyID, recipient string) (bool, error) {
+	lookup := strings.TrimSuffix(recipient, "!")
+	out, err := runCommand(nil, "gpg", "--with-colons", "--list-keys", lookup)
+	if err != nil {
+		return false, fmt.Errorf("recipient %q not found in keyring", recipient)
+	}
+
+	keyID = strings.ToUpper(keyID)
+
+	for _, line := range strings.Split(string(out), "\n") {
+		fields := strings.Split(line, ":")
+		if len(fields) < 5 {
+			continue
+		}
+		switch fields[0] {
+		case "pub", "sub":
+			id := strings.ToUpper(fields[4])
+			if strings.HasSuffix(id, keyID) || strings.HasSuffix(keyID, id) {
+				return true, nil
+			}
+		case "fpr":
+			if len(fields) >= 10 {
+				fpr := strings.ToUpper(fields[9])
+				if strings.HasSuffix(fpr, keyID) || strings.HasSuffix(keyID, fpr) {
+					return true, nil
+				}
+			}
+		}
+	}
+
+	return false, nil
+}
+
 func Encrypt(in, recipient string) (out []byte, err error) {
 	out, err = runCommand(
 		[]byte(in),

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nicola-strappazzon/password-manager/internal/card"
+	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/nicola-strappazzon/password-manager/internal/openpgp"
 	"github.com/nicola-strappazzon/password-manager/internal/term"
 )
@@ -14,6 +15,14 @@ func Decrypt(passphrase, path string) (card.Card, error) {
 	cardID, err := openpgp.GetRecipientKeyID(path)
 	if err != nil {
 		return card.Card{}, err
+	}
+
+	belongs, err := openpgp.KeyBelongsToRecipient(cardID, config.GetRecipient())
+	if err != nil {
+		return card.Card{}, err
+	}
+	if !belongs {
+		return card.Card{}, fmt.Errorf("This file is not encrypted for the configured recipient (%s).", config.GetRecipient())
 	}
 
 	useCard, err := openpgp.RequiresSmartCard(cardID)
