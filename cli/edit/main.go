@@ -63,15 +63,16 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 	original := bytes.NewBufferString(tmpCard.ToString())
 	edit := editor.NewEditor()
-	edited, path, err := edit.LaunchTempFile("example", original)
-	defer os.Remove(path)
-
-	newCard := card.New(string(edited))
-	newCard.Save()
+	edited, tmpPath, err := edit.LaunchTempFile("example", original)
+	defer os.Remove(tmpPath)
 
 	if err != nil {
 		return err
 	}
+
+	newCard := card.New(string(edited))
+	newCard.Path = p.Full()
+	newCard.Save()
 
 	return git.Commit("Edit " + pathCard)
 }
