@@ -32,6 +32,25 @@ func testAdd(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("phone", func(t *testing.T) {
+		stdout, stderr, err := run(add.NewCommand(), []string{"github", "-f", "phone", "-v", "+34123456789", "-p", testPassphrase})
+		assert.Empty(t, stdout)
+		assert.Empty(t, stderr)
+		assert.NoError(t, err)
+	})
+
+	t.Run("puk", func(t *testing.T) {
+		stdout, stderr, err := run(add.NewCommand(), []string{"github", "-f", "puk", "-v", "12345678", "-p", testPassphrase})
+		assert.Empty(t, stdout)
+		assert.Empty(t, stderr)
+		assert.NoError(t, err)
+
+		card, err := decryptor.Decrypt(testPassphrase, path.Path("github").Full())
+		assert.NoError(t, err)
+		assert.Equal(t, "+34123456789", card.Phone)
+		assert.Equal(t, "12345678", card.PUK)
+	})
+
 	t.Run("otp", func(t *testing.T) {
 		stdout, stderr, err := run(add.NewCommand(), []string{"github", "-f", "otp", "-v", "246EOSQ2ORPTQRWS", "-p", testPassphrase})
 		assert.Empty(t, stdout)
