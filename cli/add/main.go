@@ -3,6 +3,7 @@ package add
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 	"github.com/nicola-strappazzon/password-manager/internal/card"
@@ -90,6 +91,10 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	if flagField == "password" {
 		tmpCard.Password = term.ReadPassword("Enter new password: ", flagValue)
 	} else {
+		if flagField == "otp" {
+			flagValue = strings.Join(strings.Fields(flagValue), "")
+			flagValue = strings.ReplaceAll(flagValue, "-", "")
+		}
 		tmpCard.SetValue(flagField, flagValue)
 	}
 

@@ -1,9 +1,12 @@
 package integration_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/nicola-strappazzon/password-manager/cli/add"
+	"github.com/nicola-strappazzon/password-manager/internal/decryptor"
+	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,6 +37,18 @@ func testAdd(t *testing.T) {
 		assert.Empty(t, stdout)
 		assert.Empty(t, stderr)
 		assert.NoError(t, err)
+	})
+
+	t.Run("otp-with-whitespace-and-hyphens", func(t *testing.T) {
+		stdout, stderr, err := run(add.NewCommand(), []string{"github_whitespace_otp", "-f", "otp", "-v", "246E-OSQ2\tORPT-QRWS", "-p", testPassphrase})
+		assert.Empty(t, stdout)
+		assert.Empty(t, stderr)
+		assert.NoError(t, err)
+
+		card, err := decryptor.Decrypt(testPassphrase, path.Path("github_whitespace_otp").Full())
+		assert.NoError(t, err)
+		assert.Equal(t, "246EOSQ2ORPTQRWS", card.OTP)
+		assert.NoError(t, os.Remove(path.Path("github_whitespace_otp").Full()))
 	})
 
 	t.Run("field-already-exists", func(t *testing.T) {
