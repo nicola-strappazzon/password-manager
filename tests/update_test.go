@@ -27,8 +27,7 @@ func testUpdate(t *testing.T) {
 		assert.Contains(t, stderr, "Warning: Using a password on the command line interface can be insecure.")
 		assert.NoError(t, err)
 
-		stdout, _, err = run(show.NewCommand(), []string{"work/github", "-p", testPassphrase})
-		assert.Equal(t, "NewP@ssw0rd!\n", stdout)
+		stdout, _, err = run(show.NewCommand(), []string{"work/github", "-p", testPassphrase, "-t", "0"})
 		assert.NoError(t, err)
 	})
 

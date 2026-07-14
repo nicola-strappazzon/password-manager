@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"time"
 
 	"github.com/nicola-strappazzon/password-manager/internal/arguments"
 	"github.com/nicola-strappazzon/password-manager/internal/card"
@@ -23,6 +24,7 @@ var flagCopy bool
 var flagQR bool
 var flagField string
 var flagPassphrase string
+var flagTime int
 
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
@@ -33,6 +35,7 @@ func NewCommand() (cmd *cobra.Command) {
 			"  pm show aws -p <passphrase>\n" +
 			"  pm show aws -p <passphrase> -a\n" +
 			"  pm show aws -p <passphrase> -c\n" +
+			"  pm show aws -p <passphrase> -t 5\n" +
 			"  pm show aws -p <passphrase> -f otp -c\n" +
 			"  pm show aws -p <passphrase> -f aws.access_key -c",
 		PreRunE:           PreRun,
@@ -45,6 +48,7 @@ func NewCommand() (cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&flagQR, "qr", "q", false, "Generate a QR code for the decrypted password")
 	cmd.Flags().StringVarP(&flagField, "field", "f", "", "Filter by field name...")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
+	cmd.Flags().IntVarP(&flagTime, "time", "t", 3, "Seconds to wait before showing or copying the OTP code")
 
 	cmd.MarkFlagsMutuallyExclusive("all", "field", "qr")
 	cmd.MarkFlagsMutuallyExclusive("qr", "field")
@@ -119,6 +123,11 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		value = otp.Get(tmpCard.OTP)
 	}
 
+	// When showing the password by default, also surface the OTP code (if the
+	// card has one) after the configured delay.
+	showsOTP := ShowsOTP(tmpCard)
+	delay := time.Duration(flagTime) * time.Second
+
 	if flagCopy {
 		if err := clipboard.Write(value); err != nil {
 			return err
@@ -131,6 +140,17 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 		cmd.Printf("Copied %s for %s to clipboard.\n", field, p.Path())
 
+		if showsOTP {
+			cmd.PrintErrf("Waiting %s to copy the OTP code...\n", delay)
+			time.Sleep(delay)
+
+			if err := clipboard.Write(otp.Get(tmpCard.OTP)); err != nil {
+				return err
+			}
+
+			cmd.Printf("Copied OTP code for %s to clipboard.\n", p.Path())
+		}
+
 		return nil
 	}
 
@@ -141,9 +161,22 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 
 	cmd.Println(value)
 
+	if showsOTP {
+		cmd.PrintErrf("Waiting %s to show the OTP code...\n", delay)
+		time.Sleep(delay)
+
+		cmd.Println(otp.Get(tmpCard.OTP))
+	}
+
 	return nil
 }
 
 func NotInSlice(s string, list []string) bool {
 	return !slices.Contains(list, s)
+}
+
+// ShowsOTP reports whether the OTP code should be shown alongside the password,
+// i.e. the default password view is requested and the card has an OTP secret.
+func ShowsOTP(c card.Card) bool {
+	return flagField == "" && !flagAll && !c.CheckOTP()
 }
