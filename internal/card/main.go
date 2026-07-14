@@ -27,6 +27,7 @@ type Card struct {
 	Phone          string `yaml:"phone"`
 	Pin            string `yaml:"pin"`
 	Port           string `yaml:"port"`
+	PUK            string `yaml:"puk"`
 	RecoveryCodes  string `yaml:"recovery_codes"`
 	RecoveryKey    string `yaml:"recovery_key"`
 	SSID           string `yaml:"ssid"`
@@ -82,6 +83,7 @@ func (c Card) Fields() []string {
 		"phone",
 		"pin",
 		"port",
+		"puk",
 		"recovery_codes",
 		"recovery_key",
 		"schema",
@@ -124,6 +126,8 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.Pin
 	case "port":
 		out = c.Port
+	case "puk":
+		out = c.PUK
 	case "recovery_codes":
 		out = c.RecoveryCodes
 	case "recovery_key":
@@ -185,6 +189,8 @@ func (c *Card) SetValue(key, value string) {
 		c.Pin = value
 	case "port":
 		c.Port = value
+	case "puk":
+		c.PUK = value
 	case "recovery_codes":
 		c.RecoveryCodes = value
 	case "recovery_key":
