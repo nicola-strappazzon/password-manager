@@ -15,6 +15,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/otp"
 	"github.com/nicola-strappazzon/password-manager/internal/path"
 	"github.com/nicola-strappazzon/password-manager/internal/qr"
+	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/spf13/cobra"
 )
@@ -141,7 +142,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		cmd.Printf("Copied %s for %s to clipboard.\n", field, p.Path())
 
 		if showsOTP {
-			cmd.PrintErrf("Waiting %s to copy the OTP code...\n", delay)
+			cmd.PrintErrf(term.Notice("Notice:")+" Waiting %s to copy the OTP code...\n", delay)
 			time.Sleep(delay)
 
 			if err := clipboard.Write(otp.Get(tmpCard.OTP)); err != nil {
@@ -159,13 +160,24 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	cmd.Println(value)
+	switch {
+	case term.IsStdout() && (flagField == "" && !flagAll || flagField == "password"):
+		cmd.Printf(term.Label("Password:")+" %s\n", value)
+	case term.IsStdout() && flagField == "otp":
+		cmd.Printf(term.Label("OTP:")+" %s\n", value)
+	default:
+		cmd.Println(value)
+	}
 
 	if showsOTP {
-		cmd.PrintErrf("Waiting %s to show the OTP code...\n", delay)
+		cmd.PrintErrf(term.Notice("Notice:")+" Waiting %s to show the OTP code...\n", delay)
 		time.Sleep(delay)
 
-		cmd.Println(otp.Get(tmpCard.OTP))
+		if term.IsStdout() {
+			cmd.Printf(term.Label("OTP:")+" %s\n", otp.Get(tmpCard.OTP))
+		} else {
+			cmd.Println(otp.Get(tmpCard.OTP))
+		}
 	}
 
 	return nil
