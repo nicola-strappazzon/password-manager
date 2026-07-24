@@ -170,9 +170,6 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	if showsOTP {
-		cmd.PrintErrf(term.Notice("Notice:")+" Waiting %s to show the OTP code...\n", delay)
-		time.Sleep(delay)
-
 		if term.IsStdout() {
 			cmd.Printf(term.Label("OTP:")+" %s\n", otp.Get(tmpCard.OTP))
 		} else {
