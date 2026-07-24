@@ -19,6 +19,7 @@ import (
 	"github.com/nicola-strappazzon/password-manager/cli/update"
 	"github.com/nicola-strappazzon/password-manager/cli/version"
 	"github.com/nicola-strappazzon/password-manager/internal/config"
+	"github.com/nicola-strappazzon/password-manager/internal/term"
 
 	"github.com/spf13/cobra"
 )
@@ -64,7 +65,7 @@ func PersistentPreRunE(cmd *cobra.Command, args []string) error {
 	}
 
 	if f := cmd.Flags().Lookup("passphrase"); f != nil && f.Changed {
-		cmd.PrintErrln("Warning: Using a passphrase on the command line interface can be insecure.")
+		cmd.PrintErrln(term.Warning("Warning:") + " Using a passphrase on the command line interface can be insecure.")
 	}
 
 	return nil
