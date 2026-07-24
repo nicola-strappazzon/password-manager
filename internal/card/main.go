@@ -10,22 +10,48 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
+// Database holds the connection details for the item's database.
+type Database struct {
+	Engine string `yaml:"engine"`
+	Schema string `yaml:"schema"`
+}
+
+// UnmarshalYAML keeps backward compatibility with cards created before
+// "database" became a mapping: a plain scalar (e.g. "database: postgres") is
+// loaded as the engine so old items keep working and are rewritten to the new
+// mapping format on the next save.
+func (d *Database) UnmarshalYAML(data []byte) error {
+	type alias Database
+	var mapping alias
+
+	if err := yaml.Unmarshal(data, &mapping); err == nil {
+		*d = Database(mapping)
+		return nil
+	}
+
+	var scalar string
+	if err := yaml.Unmarshal(data, &scalar); err != nil {
+		return err
+	}
+
+	d.Engine = scalar
+
+	return nil
+}
+
 type Card struct {
-	Certificate string `yaml:"certificate"`
-	Database    struct {
-		Engine string `yaml:"engine"`
-		Schema string `yaml:"schema"`
-	} `yaml:"database"`
-	Email          string `yaml:"email"`
-	Files          Files  `yaml:"files"`
-	Host           string `yaml:"host"`
-	IP             string `yaml:"ip"`
-	MAC            string `yaml:"mac"`
-	MasterPassword string `yaml:"master_password"`
-	Name           string `yaml:"name"`
-	Notes          string `yaml:"notes"`
-	OTP            string `yaml:"otp"`
-	Password       string `yaml:"password"`
+	Certificate    string   `yaml:"certificate"`
+	Database       Database `yaml:"database"`
+	Email          string   `yaml:"email"`
+	Files          Files    `yaml:"files"`
+	Host           string   `yaml:"host"`
+	IP             string   `yaml:"ip"`
+	MAC            string   `yaml:"mac"`
+	MasterPassword string   `yaml:"master_password"`
+	Name           string   `yaml:"name"`
+	Notes          string   `yaml:"notes"`
+	OTP            string   `yaml:"otp"`
+	Password       string   `yaml:"password"`
 	Path           string
 	Phone          string `yaml:"phone"`
 	Pin            string `yaml:"pin"`

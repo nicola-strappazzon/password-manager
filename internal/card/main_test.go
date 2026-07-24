@@ -16,6 +16,30 @@ password: "#O123456@bc"
 	assert.Equal(t, card.New(yml).Password, "#O123456@bc")
 }
 
+func TestNewDatabaseMapping(t *testing.T) {
+	yml := `---
+database:
+  engine: postgres
+  schema: shop
+`
+
+	c := card.New(yml)
+
+	assert.Equal(t, c.Database.Engine, "postgres")
+	assert.Equal(t, c.Database.Schema, "shop")
+}
+
+func TestNewDatabaseLegacyScalar(t *testing.T) {
+	yml := `---
+database: postgres
+`
+
+	c := card.New(yml)
+
+	assert.Equal(t, c.Database.Engine, "postgres")
+	assert.Equal(t, c.Database.Schema, "")
+}
+
 func TestGetValue(t *testing.T) {
 	c := card.Card{}
 	c.Password = "#O123456@bc"
