@@ -11,8 +11,11 @@ import (
 )
 
 type Card struct {
-	Certificate    string `yaml:"certificate"`
-	Database       string `yaml:"database"`
+	Certificate string `yaml:"certificate"`
+	Database    struct {
+		Engine string `yaml:"engine"`
+		Schema string `yaml:"schema"`
+	} `yaml:"database"`
 	Email          string `yaml:"email"`
 	Files          Files  `yaml:"files"`
 	Host           string `yaml:"host"`
@@ -31,7 +34,6 @@ type Card struct {
 	RecoveryCodes  string `yaml:"recovery_codes"`
 	RecoveryKey    string `yaml:"recovery_key"`
 	SSID           string `yaml:"ssid"`
-	Schema         string `yaml:"schema"`
 	SecretKey      string `yaml:"secret_key"`
 	Serial         string `yaml:"serial"`
 	Token          string `yaml:"token"`
@@ -70,7 +72,8 @@ func (c Card) Fields() []string {
 		"aws.region",
 		"aws.secret_access_key",
 		"certificate",
-		"database",
+		"database.engine",
+		"database.schema",
 		"email",
 		"host",
 		"ip",
@@ -86,7 +89,6 @@ func (c Card) Fields() []string {
 		"puk",
 		"recovery_codes",
 		"recovery_key",
-		"schema",
 		"secret_key",
 		"serial",
 		"ssid",
@@ -100,8 +102,10 @@ func (c Card) GetValue(in string) (out string) {
 	switch in {
 	case "certificate":
 		out = c.Certificate
-	case "database":
-		out = c.Database
+	case "database.engine":
+		out = c.Database.Engine
+	case "database.schema":
+		out = c.Database.Schema
 	case "email":
 		out = c.Email
 	case "host":
@@ -132,8 +136,6 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.RecoveryCodes
 	case "recovery_key":
 		out = c.RecoveryKey
-	case "schema":
-		out = c.Schema
 	case "secret_key":
 		out = c.SecretKey
 	case "serial":
@@ -163,8 +165,10 @@ func (c *Card) SetValue(key, value string) {
 	switch key {
 	case "certificate":
 		c.Certificate = value
-	case "database":
-		c.Database = value
+	case "database.engine":
+		c.Database.Engine = value
+	case "database.schema":
+		c.Database.Schema = value
 	case "email":
 		c.Email = value
 	case "host":
@@ -195,8 +199,6 @@ func (c *Card) SetValue(key, value string) {
 		c.RecoveryCodes = value
 	case "recovery_key":
 		c.RecoveryKey = value
-	case "schema":
-		c.Schema = value
 	case "secret_key":
 		c.SecretKey = value
 	case "serial":
