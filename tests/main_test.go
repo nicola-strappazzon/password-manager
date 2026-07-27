@@ -68,6 +68,8 @@ func TestIntegration(t *testing.T) {
 	t.Run("ls", testLs)
 	t.Run("move", testMove)
 	t.Run("update", testUpdate)
+	t.Run("show", testShow)
+	t.Run("remove", testRemove)
 	t.Run("generate", testGenerate)
 }
 

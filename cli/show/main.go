@@ -80,7 +80,7 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	var pathCard = arguments.First(args)
 	var p path.Path = path.Path(pathCard)
 
-	if p.ExistDirectory() {
+	if !p.IsFile() && p.ExistDirectory() {
 		out, err := explorer.PrintTree(p.Absolute())
 		if err != nil {
 			return err
