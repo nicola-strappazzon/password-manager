@@ -28,6 +28,10 @@ func Build(c card.Card) (Spec, error) {
 	switch engine {
 	case "mysql", "mariadb":
 		return mysql(c), nil
+	case "mongodb-atlas", "mongo-atlas":
+		return mongoAtlas(c), nil
+	case "mongodb", "mongo", "docdb", "documentdb":
+		return mongo(c), nil
 	case "postgres", "postgresql", "pgsql", "psql":
 		return postgres(c), nil
 	case "":
@@ -112,4 +116,50 @@ func postgres(c card.Card) Spec {
 	}
 
 	return spec
+}
+
+func mongo(c card.Card) Spec {
+	args := []string{}
+
+	if c.Host != "" {
+		args = append(args, "--host="+c.Host)
+	}
+
+	if c.Port != "" {
+		args = append(args, "--port="+c.Port)
+	}
+
+	if c.Username != "" {
+		args = append(args, "--username="+c.Username)
+	}
+
+	if c.Password != "" {
+		args = append(args, "--password="+c.Password)
+	}
+
+	if c.Database.Schema != "" {
+		args = append(args, c.Database.Schema)
+	}
+
+	return Spec{Bin: "mongosh", Args: args}
+}
+
+func mongoAtlas(c card.Card) Spec {
+	args := []string{}
+
+	if c.Host != "" {
+		args = append(args, "mongodb+srv://"+c.Host+"/")
+	}
+
+	args = append(args, "--apiVersion=1")
+
+	if c.Username != "" {
+		args = append(args, "--username="+c.Username)
+	}
+
+	if c.Password != "" {
+		args = append(args, "--password="+c.Password)
+	}
+
+	return Spec{Bin: "mongosh", Args: args}
 }
