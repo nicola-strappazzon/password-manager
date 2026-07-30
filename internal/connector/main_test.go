@@ -34,3 +34,29 @@ func TestBuildUnsupportedEngine(t *testing.T) {
 
 	assert.Error(t, err)
 }
+
+func TestSpecString(t *testing.T) {
+	spec := connector.Spec{
+		Bin: "mysql",
+		Args: []string{
+			"--host=127.0.0.1",
+			"--user=app user",
+			"--database=team's db",
+		},
+	}
+
+	assert.Equal(t, "mysql --host=127.0.0.1 '--user=app user' '--database=team'\"'\"'s db'", spec.String())
+}
+
+func TestStringForPrintIncludesMySQLPassword(t *testing.T) {
+	c := card.Card{}
+	c.Database.Engine = "mysql"
+	c.Host = "127.0.0.1"
+	c.Username = "root"
+	c.Password = "secret value"
+
+	out, err := connector.StringForPrint(c)
+
+	assert.NoError(t, err)
+	assert.Equal(t, "mysql --host=127.0.0.1 --user=root '-psecret value'", out)
+}
