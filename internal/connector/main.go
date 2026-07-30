@@ -19,6 +19,31 @@ type Spec struct {
 	Env  []string
 }
 
+// String returns a shell-readable representation of the client invocation.
+func (s Spec) String() string {
+	parts := append([]string{s.Bin}, s.Args...)
+	for i, part := range parts {
+		parts[i] = shellQuote(part)
+	}
+
+	return strings.Join(parts, " ")
+}
+
+// StringForPrint returns the command shown to users for copy/paste.
+func StringForPrint(c card.Card) (string, error) {
+	spec, err := Build(c)
+	if err != nil {
+		return "", err
+	}
+
+	engine := strings.ToLower(strings.TrimSpace(c.Database.Engine))
+	if c.Password != "" && (engine == "mysql" || engine == "mariadb") {
+		spec.Args = append(spec.Args, "-p"+c.Password)
+	}
+
+	return spec.String(), nil
+}
+
 // Build returns the connection Spec for the given card based on its configured
 // database engine. It does not check whether the client is installed; use
 // Command for that. It fails when the engine is missing or unsupported.
@@ -60,4 +85,21 @@ func Command(c card.Card) (*exec.Cmd, error) {
 	}
 
 	return cmd, nil
+}
+
+func shellQuote(s string) string {
+	if s == "" {
+		return "''"
+	}
+
+	if strings.IndexFunc(s, func(r rune) bool {
+		return !(r >= 'a' && r <= 'z') &&
+			!(r >= 'A' && r <= 'Z') &&
+			!(r >= '0' && r <= '9') &&
+			!strings.ContainsRune("@%_+=:,./-", r)
+	}) == -1 {
+		return s
+	}
+
+	return "'" + strings.ReplaceAll(s, "'", "'\"'\"'") + "'"
 }

@@ -16,6 +16,7 @@ import (
 )
 
 var flagPassphrase string
+var flagCmd bool
 
 func NewCommand() (cmd *cobra.Command) {
 	cmd = &cobra.Command{
@@ -28,6 +29,7 @@ func NewCommand() (cmd *cobra.Command) {
 		ValidArgsFunction: completion.SuggestDirectoriesAndFiles,
 	}
 
+	cmd.Flags().BoolVar(&flagCmd, "cmd", false, "Print the database client command without executing it")
 	cmd.Flags().StringVarP(&flagPassphrase, "passphrase", "p", "", "Passphrase used to decrypt the GPG-encrypted file")
 
 	return
@@ -60,6 +62,17 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 	tmpCard, err := decryptor.Decrypt(flagPassphrase, p.Full())
 	if err != nil {
 		return err
+	}
+
+	if flagCmd {
+		out, err := connector.StringForPrint(tmpCard)
+		if err != nil {
+			return err
+		}
+
+		cmd.Println(out)
+
+		return nil
 	}
 
 	sql, err := connector.Command(tmpCard)
