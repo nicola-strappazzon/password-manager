@@ -1,6 +1,5 @@
 # Password Manager
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/nicola-strappazzon/password-manager)](https://goreportcard.com/report/github.com/nicola-strappazzon/password-manager)
 [![Test](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/nicola-strappazzon/password-manager/actions/workflows/test.yaml)
 [![Latest Release](https://img.shields.io/github/release/nicola-strappazzon/password-manager)](https://github.com/nicola-strappazzon/password-manager/releases)
 
