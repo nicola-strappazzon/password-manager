@@ -40,11 +40,8 @@ func Decrypt(passphrase, path string) (card.Card, error) {
 		passphrase = term.ReadPassword("Passphrase: ", passphrase)
 	}
 
-	if passphrase == "" {
-		if useCard {
-			return card.Card{}, fmt.Errorf("Card PIN cannot be empty.")
-		}
-		return card.Card{}, fmt.Errorf("Passphrase cannot be empty.")
+	if useCard && passphrase == "" {
+		return card.Card{}, fmt.Errorf("Card PIN cannot be empty.")
 	}
 
 	fileContent, err := openpgp.Decrypt(
