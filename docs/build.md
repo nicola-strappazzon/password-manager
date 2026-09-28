@@ -3,7 +3,7 @@
 ## Test completion for bash
 
 ```bash
-go build -o pm .
+go build -o pm ./cmd/pm
 alias pm="./pm"
 pm completion bash > /tmp/pm_completion
 source /tmp/pm_completion

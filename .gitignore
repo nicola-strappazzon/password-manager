@@ -1,4 +1,4 @@
 .task/
 dist/
 .DS_Store
-pm
+/pm
