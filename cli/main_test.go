@@ -9,7 +9,38 @@ import (
 	"github.com/nicola-strappazzon/password-manager/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestCompletionWithoutSetup(t *testing.T) {
+	homeDir := t.TempDir()
+	oldUserHomeDir := config.UserHomeDir
+	config.UserHomeDir = func() (string, error) { return homeDir, nil }
+	t.Cleanup(func() { config.UserHomeDir = oldUserHomeDir })
+
+	for _, shell := range []string{"bash", "zsh"} {
+		t.Run(shell, func(t *testing.T) {
+			output, err := os.CreateTemp(t.TempDir(), "completion")
+			require.NoError(t, err)
+			oldStdout := os.Stdout
+			os.Stdout = output
+			t.Cleanup(func() {
+				os.Stdout = oldStdout
+				output.Close()
+			})
+
+			cmd := Load()
+			cmd.SetArgs([]string{"completion", shell})
+			require.NoError(t, cmd.Execute())
+
+			script, err := os.ReadFile(output.Name())
+			require.NoError(t, err)
+			assert.Contains(t, string(script), "completion for pm")
+			_, err = os.Stat(filepath.Join(homeDir, config.DataDir))
+			assert.True(t, os.IsNotExist(err), "completion must not create a password store")
+		})
+	}
+}
 
 func TestPersistentPreRunE(t *testing.T) {
 	homeDir := t.TempDir()
