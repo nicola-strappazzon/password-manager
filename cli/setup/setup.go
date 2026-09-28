@@ -43,6 +43,16 @@ func RunCommand(cmd *cobra.Command, args []string) error {
 		}
 
 		cmd.Printf("Recipient saved in %s\n", config.GetPath(config.GPGIDFile))
+	} else {
+		cmd.Println(`
+Create an OpenPGP key pair on macOS or Linux:
+
+  gpg --generate-key
+
+Enter your name and e-mail, and choose a non-empty passphrase.
+You will use this passphrase to unlock your passwords in pm.
+
+Then run 'pm setup' again, answer 'y', and enter the same e-mail.`)
 	}
 
 	return nil
