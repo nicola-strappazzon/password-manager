@@ -59,10 +59,10 @@ pm completion bash > ~/.local/share/bash-completion/completions/pm
 ### Using Go
 
 ```bash
-go install github.com/nicola-strappazzon/password-manager@latest
+go install github.com/nicola-strappazzon/password-manager/cmd/pm@latest
 ```
 
-The binary will be placed in your `GOBIN` directory, which defaults to `~/go/bin`. Depending on how Go is installed, this directory may or may not be in your `PATH`.
+The `pm` binary is installed in `GOBIN` when set, or the `bin` directory under `GOPATH` (usually `~/go/bin`). Make sure this directory is in your `PATH`.
 
 ## Setup
 

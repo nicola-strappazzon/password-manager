@@ -22,7 +22,7 @@ tasks:
     generates:
       - pm
     cmds:
-      - go build -ldflags "-s -w" -o pm .
+      - go build -ldflags "-s -w" -o pm ./cmd/pm
 
   completions:
     desc: Generate bash completions

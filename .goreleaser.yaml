@@ -11,6 +11,7 @@ release:
 
 builds:
   - id: osx
+    main: ./cmd/pm
     binary: pm
     goos:
       - darwin
@@ -25,6 +26,7 @@ builds:
       - -s -w -X github.com/nicola-strappazzon/password-manager/cli/version.VERSION=v{{.Version}}
 
   - id: linux
+    main: ./cmd/pm
     binary: pm
     goos:
       - linux
