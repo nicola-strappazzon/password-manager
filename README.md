@@ -37,14 +37,16 @@ Using [Homebrew](https://brew.sh/):
 ```bash
 brew install nicola-strappazzon/tap/password-manager
 xattr -d com.apple.quarantine /opt/homebrew/bin/pm
-pm completion bash > /usr/local/etc/bash_completion.d/pm
 ```
+
+Homebrew installs the Bash completion file automatically.
 
 ### Linux
 
 ```bash
 curl -sL https://github.com/nicola-strappazzon/password-manager/releases/latest/download/password-manager_linux_amd64.tar.gz | tar -xz
 sudo mv pm /usr/local/bin/pm
+mkdir -p ~/.local/share/bash-completion/completions
 pm completion bash > ~/.local/share/bash-completion/completions/pm
 ```
 
@@ -53,6 +55,7 @@ For ARM64:
 ```bash
 curl -sL https://github.com/nicola-strappazzon/password-manager/releases/latest/download/password-manager_linux_arm64.tar.gz | tar -xz
 sudo mv pm /usr/local/bin/pm
+mkdir -p ~/.local/share/bash-completion/completions
 pm completion bash > ~/.local/share/bash-completion/completions/pm
 ```
 

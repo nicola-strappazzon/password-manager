@@ -18,10 +18,12 @@ Bash:
 
   # To load completions for each session, execute once:
   # Linux:
-  $ pm completion bash > /etc/bash_completion.d/pm
+  $ mkdir -p ~/.local/share/bash-completion/completions
+  $ pm completion bash > ~/.local/share/bash-completion/completions/pm
 
-  # macOS:
-  $ pm completion bash > /usr/local/etc/bash_completion.d/pm
+  # macOS (Homebrew installs the completion file automatically):
+  $ mkdir -p "$(brew --prefix)/etc/bash_completion.d"
+  $ pm completion bash > "$(brew --prefix)/etc/bash_completion.d/pm"
 
 Zsh:
 

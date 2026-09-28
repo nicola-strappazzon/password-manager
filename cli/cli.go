@@ -56,7 +56,7 @@ func Load() *cobra.Command {
 }
 
 func PersistentPreRunE(cmd *cobra.Command, args []string) error {
-	if cmd.Name() == "version" {
+	if cmd.Name() == "version" || cmd.Name() == "completion" {
 		return nil
 	}
 
