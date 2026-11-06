@@ -45,6 +45,7 @@ type Card struct {
 	Email          string   `yaml:"email"`
 	Files          Files    `yaml:"files"`
 	Host           string   `yaml:"host"`
+	Icon           string   `yaml:"icon"`
 	IP             string   `yaml:"ip"`
 	MAC            string   `yaml:"mac"`
 	MasterPassword string   `yaml:"master_password"`
@@ -102,6 +103,7 @@ func (c Card) Fields() []string {
 		"database.schema",
 		"email",
 		"host",
+		"icon",
 		"ip",
 		"mac",
 		"master_password",
@@ -136,6 +138,8 @@ func (c Card) GetValue(in string) (out string) {
 		out = c.Email
 	case "host":
 		out = c.Host
+	case "icon":
+		out = c.Icon
 	case "ip":
 		out = c.IP
 	case "mac":
@@ -199,6 +203,8 @@ func (c *Card) SetValue(key, value string) {
 		c.Email = value
 	case "host":
 		c.Host = value
+	case "icon":
+		c.Icon = value
 	case "ip":
 		c.IP = value
 	case "mac":
