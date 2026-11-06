@@ -16,6 +16,18 @@ password: "#O123456@bc"
 	assert.Equal(t, card.New(yml).Password, "#O123456@bc")
 }
 
+func TestIcon(t *testing.T) {
+	c := card.New("icon: 🔑\n")
+	assert.Equal(t, "🔑", c.Icon)
+	assert.Equal(t, "🔑", c.GetValue("icon"))
+	assert.Contains(t, c.Fields(), "icon")
+
+	c.SetValue("icon", "lock")
+	assert.Equal(t, "lock", c.Icon)
+	assert.Equal(t, "lock", card.New(c.ToString()).GetValue("icon"))
+	assert.Empty(t, card.New("name: example\n").Icon)
+}
+
 func TestNewDatabaseMapping(t *testing.T) {
 	yml := `---
 database:
