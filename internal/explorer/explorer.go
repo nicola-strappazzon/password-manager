@@ -3,39 +3,78 @@ package explorer
 import (
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/nicola-strappazzon/password-manager/internal/config"
-	"github.com/nicola-strappazzon/password-manager/store"
 )
 
 func Directories() (dirs []string, err error) {
-	entries, err := store.List(config.GetPath(""))
-	if err != nil {
-		return nil, err
-	}
-	for _, entry := range entries {
-		if entry.Directory {
-			dirs = append(dirs, entry.Path+"/")
+	basePath := config.GetPath("")
+
+	err = filepath.WalkDir(basePath, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return nil
 		}
-	}
-	return dirs, nil
+		if !d.IsDir() {
+			return nil
+		}
+
+		rel, _ := filepath.Rel(basePath, path)
+		if rel == "." {
+			return nil
+		}
+
+		if strings.HasPrefix(d.Name(), ".") {
+			return filepath.SkipDir
+		}
+
+		dirs = append(dirs, rel+"/")
+
+		return nil
+	})
+
+	return
 }
 
 func DirectoriesAndFiles() (list []string, err error) {
-	entries, err := store.List(config.GetPath(""))
-	if err != nil {
-		return nil, err
-	}
-	for _, entry := range entries {
-		path := entry.Path
-		if entry.Directory {
-			path += "/"
+	basePath := config.GetPath("")
+
+	err = filepath.WalkDir(basePath, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return nil
 		}
-		list = append(list, path)
-	}
-	return list, nil
+
+		rel, _ := filepath.Rel(basePath, path)
+		if rel == "." {
+			return nil
+		}
+
+		rel = filepath.ToSlash(rel)
+
+		if d.IsDir() {
+			if strings.HasPrefix(d.Name(), ".") {
+				return filepath.SkipDir
+			}
+
+			if !strings.HasSuffix(rel, "/") {
+				rel += "/"
+			}
+
+			list = append(list, rel)
+			return nil
+		}
+
+		if strings.HasSuffix(d.Name(), ".gpg") {
+			noExt := strings.TrimSuffix(rel, ".gpg")
+			list = append(list, noExt)
+		}
+
+		return nil
+	})
+
+	return
 }
 
 func PrintTree(root string) (out string, err error) {
